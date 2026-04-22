@@ -8,7 +8,7 @@
 </head>
 <body class="fx-tp-page">
   <header class="fx-tp-bar">
-    <a href="./AI智能录题首页.html">← 返回我的资源</a>
+    <a href="作业首页.html" id="backToHomeBtn">← 返回作业首页</a>
     <h1>人工委托录题进度</h1>
   </header>
   <div class="fx-tp-inner">
@@ -201,5 +201,17 @@
   bindListClick();
 })();
   </script>
+
+<script>
+// backToHomeBtn click handler fallback
+document.addEventListener('click', function(e) {
+  var target = e.target.closest('#backToHomeBtn');
+  if (target) {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = '作业首页.html';
+  }
+}, true);
+</script>
 </body>
 </html>
