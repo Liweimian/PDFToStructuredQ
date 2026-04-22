@@ -8,7 +8,7 @@
 </head>
 <body class="fx-tp-page">
   <header class="fx-tp-bar">
-    <a href="作业首页.html" id="backToHomeBtn">← 返回作业首页</a>
+    <a href="index.html" id="backToHomeBtn" onclick="window.location.href='index.html'">← 返回我的资源</a>
     <h1>人工委托录题进度</h1>
   </header>
   <div class="fx-tp-inner">
@@ -209,7 +209,7 @@ document.addEventListener('click', function(e) {
   if (target) {
     e.preventDefault();
     e.stopPropagation();
-    window.location.href = '作业首页.html';
+    window.location.href = 'index.html';
   }
 }, true);
 </script>
