@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 解析任务进度</title>
+  <link rel="stylesheet" href="./fx-task-progress-shared.css" />
+</head>
+<body class="fx-tp-page">
+  <header class="fx-tp-bar">
+    <a href="./AI智能录题首页.html">← 返回我的资源</a>
+    <h1>AI 解析任务进度</h1>
+  </header>
+  <div class="fx-tp-inner">
+    <div id="fxAiFilterBar" class="fx-progress-filter-bar">
+      <div class="fx-progress-filter-inner">
+        <div class="fx-dg-filter-search">
+          <input type="search" id="fxAiNameSearch" class="fx-dg-name-search" placeholder="请输入名称" autocomplete="off" enterkeyhint="search" aria-label="名称" />
+        </div>
+      </div>
+    </div>
+    <div id="fxProgressLists">
+      <div data-fx-task-list="ai" class="fx-progress-card-list">
+        <article class="fx-ai-card" data-category="ai" data-status="AI解析成功" data-content="整卷" data-subject="初中 / 数学" data-grade="七年级下" data-ptype="—" data-title="2025 春 · 七年级数学单元检测">
+          <div class="fx-ai-card-left">
+            <div class="fx-ai-card-title-row">
+              <span class="fx-ai-card-title">2025 春 · 七年级数学单元检测</span>
+              <span class="fx-ai-tag fx-ai-parse--ok">AI解析成功</span>
+            </div>
+            <div class="fx-ai-task-meta">
+              <div class="fx-ai-task-tags">
+                <span>PDF</span><span class="fx-ai-meta-sep">|</span><span>1.2MB</span><span class="fx-ai-meta-sep">|</span><span>共 15 题</span>
+              </div>
+              <div class="fx-ai-task-times">
+                <span>提交时间 2026-04-12 09:05</span>
+                <span>解析完成时间 2026-04-12 10:20</span>
+              </div>
+            </div>
+          </div>
+          <div class="fx-ai-actions">
+            <button type="button" class="fx-ai-btn">查看</button>
+            <button type="button" class="fx-ai-btn">去组卷</button>
+          </div>
+        </article>
+      </div>
+      <div data-fx-task-list="ai" class="fx-progress-card-list">
+        <article class="fx-ai-card" data-category="ai" data-status="AI解析中" data-content="整卷" data-subject="高中 / 物理" data-grade="高三" data-ptype="—" data-title="高三物理压轴题汇编.pdf">
+          <div class="fx-ai-card-left">
+            <div class="fx-ai-card-title-row">
+              <span class="fx-ai-card-title">高三物理压轴题汇编.pdf</span>
+              <span class="fx-ai-tag fx-ai-parse--ing">AI解析中</span>
+            </div>
+            <div class="fx-ai-task-meta">
+              <div class="fx-ai-task-tags">
+                <span>PDF</span><span class="fx-ai-meta-sep">|</span><span>3.4MB</span><span class="fx-ai-meta-sep">|</span><span>解析中...</span>
+              </div>
+              <div class="fx-ai-task-times">
+                <span>提交时间 2026-04-11 08:40</span>
+              </div>
+            </div>
+          </div>
+          <div class="fx-ai-actions fx-ai-actions--empty" aria-hidden="true"></div>
+        </article>
+        <article class="fx-ai-card" data-category="ai" data-status="AI解析失败" data-content="整卷" data-subject="初中 / 数学" data-grade="七年级下" data-ptype="—" data-title="单元知识点汇总.pdf">
+          <div class="fx-ai-card-left">
+            <div class="fx-ai-card-title-row">
+              <span class="fx-ai-card-title">单元知识点汇总.pdf</span>
+              <span class="fx-ai-tag fx-ai-parse--fail">AI解析失败</span>
+            </div>
+            <div class="fx-ai-task-meta">
+              <div class="fx-ai-task-tags">
+                <span>PDF</span><span class="fx-ai-meta-sep">|</span><span>1.2MB</span><span class="fx-ai-meta-sep">|</span><span>共 15 题</span>
+              </div>
+              <div class="fx-ai-task-times">
+                <span>提交时间 2026-04-10 13:20</span>
+              </div>
+            </div>
+          </div>
+          <div class="fx-ai-actions">
+            <button type="button" class="fx-ai-btn">重新解析</button>
+            <button type="button" class="fx-ai-btn">转人工录题</button>
+          </div>
+        </article>
+      </div>
+    </div>
+    <p class="fx-ai-pagination" id="fxPageHint">共 3 条数据</p>
+  </div>
+  <script>
+(function () {
+  function getAiNameQuery() {
+    var inp = document.getElementById('fxAiNameSearch');
+    return (inp && inp.value ? String(inp.value) : '').trim().toLowerCase();
+  }
+  function cardMatchesAiFilters(card) {
+    if ((card.getAttribute('data-category') || '') !== 'ai') return true;
+    var nameQ = getAiNameQuery();
+    var title = (card.getAttribute('data-title') || '').toLowerCase();
+    if (nameQ && title.indexOf(nameQ) === -1) return false;
+    return true;
+  }
+  function applyChipFilter() {
+    var n = 0;
+    document.querySelectorAll('#fxProgressLists .fx-ai-card').forEach(function (card) {
+      var ok = cardMatchesAiFilters(card);
+      card.classList.toggle('fx-search-out', !ok);
+      if (ok) n++;
+    });
+    var hint = document.getElementById('fxPageHint');
+    if (hint) hint.textContent = '共 ' + n + ' 条数据';
+  }
+  function bindProgressSearch() {
+    var ain = document.getElementById('fxAiNameSearch');
+    if (ain) {
+      ain.addEventListener('input', applyChipFilter);
+      ain.addEventListener('search', applyChipFilter);
+    }
+  }
+  function bindListClick() {
+    var list = document.getElementById('fxProgressLists');
+    if (!list) return;
+    list.addEventListener('click', function (e) {
+      var btn = e.target.closest('.fx-ai-btn');
+      if (!btn) return;
+      var t = (btn.textContent || '').trim();
+      if (t === '去组卷') {
+        e.preventDefault();
+        window.location.href = '去组卷编辑试卷.html';
+      }
+      if (t === '查看') {
+        e.preventDefault();
+        window.location.href = 'AI录题校改.html';
+      }
+      if (t === '重新解析') {
+        e.preventDefault();
+        alert('演示：已加入重新解析队列。');
+      }
+      if (t === '转人工录题') {
+        e.preventDefault();
+        window.location.href = '申请委托录题页面.html';
+      }
+    });
+  }
+  bindProgressSearch();
+  applyChipFilter();
+  bindListClick();
+})();
+  </script>
+</body>
+</html>

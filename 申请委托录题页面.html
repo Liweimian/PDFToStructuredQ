@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+  <title>申请委托录题 - 飞象星球</title>
+  <link rel="icon" href="https://metis-online.fbcontent.cn/metis-lectio/b0D5c7GTSnFgcExISLjiH.ico">
+  <link href="./新建录题_files/4786.9e762905.css" rel="stylesheet">
+  <link href="./新建录题_files/5384.33539bdc.css" rel="stylesheet">
+  <link href="./新建录题_files/main.a1660310.css" rel="stylesheet">
+  <style>
+    :root {
+      --fx-primary: #1677ff;
+      --fx-text: rgba(0, 0, 0, 0.88);
+      --fx-text-sec: rgba(0, 0, 0, 0.45);
+      --fx-border: #e8e8e8;
+      --fx-bg: #f5f5f5;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 14px; line-height: 1.5715; color: var(--fx-text); background: var(--fx-bg);
+      display: flex; flex-direction: column; min-height: 100%;
+    }
+    .fx-topbar {
+      flex-shrink: 0; background: #fff; border-bottom: 1px solid var(--fx-border);
+      padding: 0 24px; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .fx-bc { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: 14px; }
+    .fx-bc a { color: var(--fx-primary); text-decoration: none; }
+    .fx-bc a:hover { text-decoration: underline; }
+    .fx-bc-sep { display: inline-flex; opacity: 0.45; }
+    .fx-main {
+      flex: 1; width: 100%; max-width: 960px; margin: 0 auto; padding: 20px 24px 48px;
+    }
+    .fx-card {
+      background: #fff; border: 1px solid var(--fx-border); border-radius: 8px; padding: 18px 20px; margin-bottom: 16px;
+    }
+    .fx-card h2 { margin: 0 0 14px; font-size: 15px; font-weight: 600; color: var(--fx-text); }
+    .fx-form-grid { display: grid; gap: 14px 20px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 640px) { .fx-form-grid { grid-template-columns: 1fr; } }
+    .fx-field { display: flex; flex-direction: column; gap: 6px; }
+    .fx-field.fx-span-2 { grid-column: 1 / -1; }
+    .fx-field label { font-size: 13px; color: var(--fx-text-sec); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .fx-field label .fx-ai-tag {
+      font-size: 11px; font-weight: 500; color: #1677ff; background: rgba(22,119,255,0.1); padding: 1px 8px; border-radius: 4px;
+    }
+    .fx-field input[type="text"],
+    .fx-field select, .fx-field textarea {
+      width: 100%; padding: 8px 11px; font-size: 14px; border: 1px solid #d9d9d9; border-radius: 6px; color: var(--fx-text);
+      background: #fff; font-family: inherit;
+    }
+    .fx-field textarea { min-height: 88px; resize: vertical; }
+    .fx-field input:focus, .fx-field select:focus, .fx-field textarea:focus {
+      outline: none; border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,0.12);
+    }
+    .fx-file-row {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 14px; background: #fafafa;
+      border: 1px dashed #d9d9d9; border-radius: 8px;
+    }
+    .fx-file-name { font-weight: 500; word-break: break-all; }
+    .fx-btn {
+      padding: 8px 16px; font-size: 14px; border-radius: 6px; border: 1px solid #d9d9d9; background: #fff; cursor: pointer; color: rgba(0,0,0,0.88);
+    }
+    .fx-btn:hover { border-color: #1677ff; color: #1677ff; }
+    .fx-btn-primary {
+      border-color: #1677ff; background: #1677ff; color: #fff;
+    }
+    .fx-btn-primary:hover { background: #4096ff; border-color: #4096ff; color: #fff; }
+    .fx-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 8px; }
+    .fx-page-title { margin: 0 0 6px; font-size: 18px; font-weight: 600; }
+    .fx-notice-lead {
+      margin: 0 0 18px; padding: 10px 14px; font-size: 13px; line-height: 1.65; color: rgba(0,0,0,0.88);
+      background: #fff7e6; border: 1px solid #ffd591; border-radius: 8px;
+    }
+    .fx-notice-lead strong { color: #d46b08; font-weight: 600; }
+    .fx-hidden { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <header class="fx-topbar">
+    <nav class="fx-bc" aria-label="面包屑">
+      <a href="AI智能录题首页.html">← 返回录题列表</a>
+      <span class="fx-bc-sep" aria-hidden="true">/</span>
+      <strong>申请委托录题</strong>
+    </nav>
+  </header>
+
+  <main class="fx-main">
+    <h1 class="fx-page-title">申请委托录题</h1>
+    <p class="fx-notice-lead" role="note"><strong>重要提示：</strong>请提前 7 个自然日申请，以免影响后续使用；</p>
+
+    <form id="fxDelegateForm" autocomplete="on">
+        <div class="fx-card">
+          <h2>卷面文件</h2>
+          <div class="fx-file-row" id="fxFileRow">
+            <span class="fx-ai-tag">AI 同步</span>
+            <span id="fxFileLabel" class="fx-file-name">未检测到文件，可在下方重新选择</span>
+            <button type="button" class="fx-btn" id="fxPreviewBtn" hidden>预览</button>
+            <label class="fx-btn" for="fxRefile">重新选择文件</label>
+            <input type="file" id="fxRefile" class="fx-hidden" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" />
+          </div>
+        </div>
+
+        <div class="fx-card">
+          <h2>卷面信息</h2>
+          <div class="fx-form-grid">
+            <div class="fx-field fx-span-2">
+              <label for="fxD_title">试卷 / 资源名称 <span class="fx-ai-tag">AI</span></label>
+              <input type="text" id="fxD_title" name="title" placeholder="由文件名与识别结果生成" />
+            </div>
+            <div class="fx-field">
+              <label for="fxD_contentType">内容类型 <span class="fx-ai-tag">AI</span></label>
+              <select id="fxD_contentType" name="contentType"></select>
+            </div>
+            <div class="fx-field">
+              <label for="fxD_subject">学段学科 <span class="fx-ai-tag">AI</span></label>
+              <select id="fxD_subject" name="subject"></select>
+            </div>
+            <div class="fx-field">
+              <label for="fxD_grade">年级 <span class="fx-ai-tag">AI</span></label>
+              <select id="fxD_grade" name="grade"></select>
+            </div>
+            <div class="fx-field">
+              <label for="fxD_paper">试卷类型 <span class="fx-ai-tag">AI</span></label>
+              <select id="fxD_paper" name="paperType"></select>
+            </div>
+            <div class="fx-field">
+              <label for="fxD_year">学年 <span class="fx-ai-tag">AI</span></label>
+              <select id="fxD_year" name="schoolYear"></select>
+            </div>
+            <div class="fx-field">
+              <label for="fxD_region">地区 <span class="fx-ai-tag">AI</span></label>
+              <select id="fxD_region" name="region"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fx-card">
+          <h2>备注</h2>
+          <div class="fx-field">
+            <label for="fxD_note" class="fx-hidden">备注内容</label>
+            <textarea id="fxD_note" name="remark" rows="4" placeholder="可选；AI 将根据卷面信息预填，可自行修改" aria-label="备注"></textarea>
+          </div>
+        </div>
+
+        <div class="fx-actions">
+          <button type="button" class="fx-btn" id="fxDraft">保存草稿</button>
+          <button type="submit" class="fx-btn fx-btn-primary" id="fxSubmit">提交委托</button>
+        </div>
+    </form>
+  </main>
+
+  <script>
+(function () {
+  var OPT = {
+    contentType: ['试卷', '题单'],
+    subject: ['初中 / 数学', '初中 / 英语', '高中 / 物理', '高中 / 数学', '小学 / 语文'],
+    grade: ['七年级下', '八年级上', '九年级上', '高一', '高二', '高三'],
+    paperType: ['单元测', '期中', '期末', '综合练习', '模拟卷'],
+    schoolYear: ['2024 学年', '2025 学年', '2026 学年'],
+    region: ['未识别地区', '北京市', '上海市', '广东省']
+  };
+
+  var IDB_NAME = 'fx_ai_handoff_v1';
+  var IDB_STORE = 'files';
+  var pendingFile = null;
+  var blobUrl = null;
+
+  function fillSelect(id, options, current) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '';
+    options.forEach(function (v) {
+      var o = document.createElement('option');
+      o.value = v;
+      o.textContent = v;
+      if (current != null && v === current) o.selected = true;
+      el.appendChild(o);
+    });
+    if (current != null && !options.some(function (x) { return x === current; })) {
+      var o2 = document.createElement('option');
+      o2.value = current;
+      o2.textContent = current;
+      o2.selected = true;
+      el.insertBefore(o2, el.firstChild);
+    }
+  }
+
+  function loadMeta() {
+    var m = {};
+    try {
+      m = JSON.parse(sessionStorage.getItem('fx_delegate_sheet_meta') || '{}');
+    } catch (e) {}
+    return m;
+  }
+
+  function stripExt(name) {
+    if (!name) return '';
+    return String(name).replace(/\.(pdf|docx?|png|jpe?g)$/i, '');
+  }
+
+  /** 与录题列表 mockOcrMeta 一致的演示智能填充；备注由 AI 根据卷面预填 */
+  function aiFillAll(m, file) {
+    var fileName = (file && file.name) || m.fileName || '';
+    var baseTitle = stripExt(fileName) || '未命名试卷';
+
+    document.getElementById('fxD_title').value = baseTitle;
+
+    fillSelect('fxD_contentType', OPT.contentType, m.contentType || OPT.contentType[0]);
+    fillSelect('fxD_subject', OPT.subject, m.subject || OPT.subject[0]);
+    fillSelect('fxD_grade', OPT.grade, m.grade || OPT.grade[0]);
+    fillSelect('fxD_paper', OPT.paperType, m.paperType || OPT.paperType[0]);
+    fillSelect('fxD_year', OPT.schoolYear, m.schoolYear || OPT.schoolYear[1]);
+    fillSelect('fxD_region', OPT.region, m.region || OPT.region[0]);
+
+    var sub = m.subject || '';
+    var gr = m.grade || '';
+    var pt = m.paperType || '';
+    var reg = m.region || '';
+    var note =
+      '【AI 智能预填】已根据上传文件「' + (fileName || '—') + '」识别卷面信息：' +
+      sub + ' · ' + gr + ' · ' + pt + ' · ' + reg +
+      '。请核对卷面信息与附件一致；若有特殊排版、划题范围或其他说明，请在此补充。';
+    document.getElementById('fxD_note').value = note;
+
+    var label = document.getElementById('fxFileLabel');
+    if (label) {
+      label.textContent = fileName ? fileName : '未选择文件（可从录题列表「委托人工」同步）';
+    }
+  }
+
+  function revokeBlob() {
+    if (blobUrl) {
+      try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+      blobUrl = null;
+    }
+  }
+
+  function setPreviewButton(file) {
+    var btn = document.getElementById('fxPreviewBtn');
+    if (!btn) return;
+    revokeBlob();
+    if (file && file.size >= 0) {
+      blobUrl = URL.createObjectURL(file);
+      btn.hidden = false;
+      btn.onclick = function () { window.open(blobUrl, '_blank', 'noopener,noreferrer'); };
+    } else {
+      btn.hidden = true;
+      btn.onclick = null;
+    }
+  }
+
+  function loadDelegateFileFromIdb(cb) {
+    var req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = function () {
+      var db = req.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+    };
+    req.onerror = function () { cb(null); };
+    req.onsuccess = function () {
+      var db = req.result;
+      try {
+        if (!db.objectStoreNames.contains(IDB_STORE)) {
+          cb(null);
+          return;
+        }
+        var tx = db.transaction(IDB_STORE, 'readwrite');
+        var st = tx.objectStore(IDB_STORE);
+        var g = st.get('delegate_pending');
+        g.onsuccess = function () {
+          var file = g.result;
+          if (file == null) {
+            cb(null);
+            return;
+          }
+          var delReq = st.delete('delegate_pending');
+          delReq.onsuccess = function () { cb(file); };
+          delReq.onerror = function () { cb(file); };
+        };
+        g.onerror = function () { cb(null); };
+      } catch (e) {
+        cb(null);
+      }
+    };
+  }
+
+  function bindFileReplace() {
+    var input = document.getElementById('fxRefile');
+    if (!input) return;
+    input.addEventListener('change', function () {
+      var f = input.files && input.files[0];
+      if (!f) return;
+      pendingFile = f;
+      var meta = loadMeta();
+      meta.fileName = f.name;
+      sessionStorage.setItem('fx_delegate_sheet_meta', JSON.stringify(meta));
+      aiFillAll(meta, f);
+      setPreviewButton(f);
+      input.value = '';
+    });
+  }
+
+  function bindFormActions() {
+    document.getElementById('fxDraft').addEventListener('click', function () {
+      alert('演示：草稿已保存在本地会话（未对接服务端）。');
+    });
+    document.getElementById('fxDelegateForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert('演示：委托申请已提交（未对接服务端）。\n卷面名称：' + (document.getElementById('fxD_title').value || '—'));
+    });
+  }
+
+  function boot() {
+    bindFileReplace();
+    bindFormActions();
+
+    var meta = loadMeta();
+    loadDelegateFileFromIdb(function (file) {
+      if (file) {
+        pendingFile = file;
+        if (!meta.fileName) meta.fileName = file.name;
+        sessionStorage.setItem('fx_delegate_sheet_meta', JSON.stringify(meta));
+      }
+      aiFillAll(meta, file || pendingFile);
+      setPreviewButton(file || pendingFile);
+    });
+
+    sessionStorage.removeItem('fx_delegate_from_ai');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+  </script>
+</body>
+</html>

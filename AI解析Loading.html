@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>AI智能解析中 - 飞象星球</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .loading-container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      width: 600px;
+      padding: 40px 50px;
+      text-align: center;
+    }
+    .loading-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1f1f1f;
+      margin-bottom: 24px;
+    }
+    .loading-hint {
+      font-size: 14px;
+      color: #0958d9;
+      background: #e6f4ff;
+      border: 1px solid #91caff;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      text-align: left;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .loading-hint-icon {
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .pipeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .pipeline-line-bg {
+      position: absolute;
+      top: 14px;
+      left: 40px;
+      right: 40px;
+      height: 2px;
+      background: #f0f0f0;
+      z-index: 1;
+    }
+    .pipeline-progress {
+      position: absolute;
+      top: 14px;
+      left: 40px;
+      height: 2px;
+      background: #1677ff;
+      z-index: 2;
+      width: 0%;
+      transition: width 0.8s ease;
+    }
+    .step {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: 80px;
+    }
+    .step-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #d9d9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #999;
+      transition: all 0.3s;
+    }
+    .step.active .step-icon {
+      border-color: #1677ff;
+      color: #1677ff;
+    }
+    .step.done .step-icon {
+      background: #1677ff;
+      border-color: #1677ff;
+      color: #fff;
+    }
+    .step-text {
+      font-size: 13px;
+      color: #999;
+      transition: color 0.3s;
+    }
+    .step.active .step-text, .step.done .step-text {
+      color: #1f1f1f;
+      font-weight: 500;
+    }
+    .spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #1677ff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-container">
+    <div class="loading-title">AI 智能解析中...</div>
+    <div class="loading-hint">
+      <span class="loading-hint-icon">💡</span>
+      <div>当前解析需要几分钟，现在运行中，您可以同时开启多个任务，稍后查看结果。</div>
+    </div>
+    
+    <div class="pipeline">
+      <div class="pipeline-line-bg"></div>
+      <div class="pipeline-progress" id="progressLine"></div>
+      
+      <div class="step active" id="step1">
+        <div class="step-icon"><div class="spinner"></div></div>
+        <div class="step-text">AI切题</div>
+      </div>
+      <div class="step" id="step2">
+        <div class="step-icon">2</div>
+        <div class="step-text">题目判重</div>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-icon">3</div>
+        <div class="step-text">OCR识别</div>
+      </div>
+      <div class="step" id="step4">
+        <div class="step-icon">4</div>
+        <div class="step-text">AI录题</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 模拟解析进度的动画
+    setTimeout(() => {
+      document.getElementById('progressLine').style.width = '33.33%';
+      document.getElementById('step1').classList.remove('active');
+      document.getElementById('step1').classList.add('done');
+      document.getElementById('step1').querySelector('.step-icon').innerHTML = '✓';
+      
+      document.getElementById('step2').classList.add('active');
+      document.getElementById('step2').querySelector('.step-icon').innerHTML = '<div class="spinner"></div>';
+    }, 1200);
+
+    setTimeout(() => {
+      document.getElementById('progressLine').style.width = '66.66%';
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step2').classList.add('done');
+      document.getElementById('step2').querySelector('.step-icon').innerHTML = '✓';
+      
+      document.getElementById('step3').classList.add('active');
+      document.getElementById('step3').querySelector('.step-icon').innerHTML = '<div class="spinner"></div>';
+    }, 2400);
+
+    setTimeout(() => {
+      document.getElementById('progressLine').style.width = '100%';
+      document.getElementById('step3').classList.remove('active');
+      document.getElementById('step3').classList.add('done');
+      document.getElementById('step3').querySelector('.step-icon').innerHTML = '✓';
+      
+      document.getElementById('step4').classList.add('active');
+      document.getElementById('step4').querySelector('.step-icon').innerHTML = '<div class="spinner"></div>';
+    }, 3600);
+
+    setTimeout(() => {
+      document.getElementById('step4').classList.remove('active');
+      document.getElementById('step4').classList.add('done');
+      document.getElementById('step4').querySelector('.step-icon').innerHTML = '✓';
+      
+      // 解析完成，跳转到校改页面
+      setTimeout(() => {
+        window.location.replace('AI录题校改.html');
+      }, 600);
+    }, 4800);
+  </script>
+</body>
+</html>

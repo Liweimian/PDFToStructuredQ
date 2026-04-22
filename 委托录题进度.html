@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>委托录题进度</title>
+  <link rel="stylesheet" href="./fx-task-progress-shared.css" />
+</head>
+<body class="fx-tp-page">
+  <header class="fx-tp-bar">
+    <a href="./AI智能录题首页.html">← 返回我的资源</a>
+    <h1>人工委托录题进度</h1>
+  </header>
+  <div class="fx-tp-inner">
+    <div id="fxDelegateFilterBar" class="fx-progress-filter-bar">
+      <div class="fx-progress-filter-inner">
+        <div class="fx-progress-filter-filters">
+          <select id="fxDgFStatus" class="fx-dg-fsel" aria-label="状态">
+            <option value="" selected>状态</option>
+            <option value="已完成">已完成</option>
+            <option value="生产中">生产中</option>
+            <option value="草稿">草稿</option>
+            <option value="驳回">驳回</option>
+          </select>
+          <select id="fxDgFContent" class="fx-dg-fsel" aria-label="内容类型">
+            <option value="" selected>内容类型</option>
+            <option value="试卷">试卷</option>
+            <option value="题单">题单</option>
+          </select>
+          <select id="fxDgFSubject" class="fx-dg-fsel" aria-label="学段学科">
+            <option value="" selected>学段学科</option>
+            <option value="初中 / 语文">初中 / 语文</option>
+            <option value="初中 / 数学">初中 / 数学</option>
+            <option value="初中 / 英语">初中 / 英语</option>
+            <option value="小学 / 语文">小学 / 语文</option>
+          </select>
+          <select id="fxDgFGrade" class="fx-dg-fsel" aria-label="年级">
+            <option value="" selected>年级</option>
+            <option value="七年级上">七年级上</option>
+            <option value="七年级下">七年级下</option>
+            <option value="八年级上">八年级上</option>
+            <option value="九年级">九年级</option>
+            <option value="三年级下">三年级下</option>
+          </select>
+          <select id="fxDgFType" class="fx-dg-fsel" aria-label="类型">
+            <option value="" selected>类型</option>
+            <option value="月考">月考</option>
+            <option value="同步练习">同步练习</option>
+            <option value="单元测试">单元测试</option>
+            <option value="学业考试">学业考试</option>
+            <option value="期末">期末</option>
+          </select>
+        </div>
+        <div class="fx-dg-filter-search">
+          <input type="search" id="fxDelegateNameSearch" class="fx-dg-name-search" placeholder="请输入名称" autocomplete="off" enterkeyhint="search" aria-label="名称" />
+        </div>
+      </div>
+    </div>
+    <div id="fxProgressLists">
+      <div id="fxDelegateCardList" class="fx-progress-card-list">
+        <article class="fx-ai-card fx-dg-card" data-category="delegate" data-status="已完成" data-content="试卷" data-subject="初中 / 语文" data-grade="七年级上" data-ptype="月考" data-title="李伟绵test试卷">
+          <div class="fx-dg-main">
+            <div class="fx-dg-line1">
+              <span class="fx-dg-title">李伟绵test试卷</span>
+              <span class="fx-dg-status fx-dg-status--done">已完成</span>
+            </div>
+            <div class="fx-dg-line2">
+              <span>id: 110</span><span>试卷</span><span>初中 / 语文</span><span>七年级上</span><span>月考</span><span>提交时间 2024-07-26 18:03</span><span>完成时间 2024-07-26 18:13</span>
+            </div>
+          </div>
+          <div class="fx-dg-aside"><button type="button" class="fx-dg-action">查看试卷</button></div>
+        </article>
+        <article class="fx-ai-card fx-dg-card" data-category="delegate" data-status="生产中" data-content="题单" data-subject="初中 / 数学" data-grade="八年级上" data-ptype="同步练习" data-title="春季同步练习委托">
+          <div class="fx-dg-main">
+            <div class="fx-dg-line1">
+              <span class="fx-dg-title">春季同步练习委托</span>
+              <span class="fx-dg-status fx-dg-status--make">生产中</span>
+            </div>
+            <div class="fx-dg-line2">
+              <span>id: 98</span><span>题单</span><span>初中 / 数学</span><span>八年级上</span><span>同步练习</span><span>提交时间 2024-07-25 11:20</span>
+            </div>
+          </div>
+          <div class="fx-dg-aside fx-dg-aside--empty" aria-hidden="true"></div>
+        </article>
+        <article class="fx-ai-card fx-dg-card" data-category="delegate" data-status="驳回" data-content="试卷" data-subject="小学 / 语文" data-grade="三年级下" data-ptype="单元测试" data-title="lwmtest试卷委托录题">
+          <div class="fx-dg-main">
+            <div class="fx-dg-line1">
+              <span class="fx-dg-title">lwmtest试卷委托录题</span>
+              <span class="fx-dg-status fx-dg-status--reject">驳回</span>
+            </div>
+            <div class="fx-dg-line2">
+              <span>id: 60</span><span>试卷</span><span>小学 / 语文</span><span>三年级下</span><span>单元测试</span><span>提交时间 2024-07-18 17:38</span>
+            </div>
+          </div>
+          <div class="fx-dg-aside"><button type="button" class="fx-dg-action">编辑</button></div>
+        </article>
+        <article class="fx-ai-card fx-dg-card" data-category="delegate" data-status="已完成" data-content="题单" data-subject="初中 / 英语" data-grade="九年级" data-ptype="学业考试" data-title="英语词汇题单委托">
+          <div class="fx-dg-main">
+            <div class="fx-dg-line1">
+              <span class="fx-dg-title">英语词汇题单委托</span>
+              <span class="fx-dg-status fx-dg-status--done">已完成</span>
+            </div>
+            <div class="fx-dg-line2">
+              <span>id: 72</span><span>题单</span><span>初中 / 英语</span><span>九年级</span><span>学业考试</span><span>提交时间 2024-07-20 09:05</span><span>完成时间 2024-07-20 14:22</span>
+            </div>
+          </div>
+          <div class="fx-dg-aside"><button type="button" class="fx-dg-action">查看题单</button></div>
+        </article>
+        <article class="fx-ai-card fx-dg-card" data-category="delegate" data-status="草稿" data-content="试卷" data-subject="初中 / 语文" data-grade="七年级上" data-ptype="月考" data-title="李伟绵新提交测试-2">
+          <div class="fx-dg-main">
+            <div class="fx-dg-line1">
+              <span class="fx-dg-title">李伟绵新提交测试-2</span>
+              <span class="fx-dg-status fx-dg-status--draft">草稿</span>
+            </div>
+            <div class="fx-dg-line2">
+              <span>id: 56</span><span>试卷</span><span>初中 / 语文</span><span>七年级上</span><span>月考</span><span>提交时间 2024-07-18 16:27</span>
+            </div>
+          </div>
+          <div class="fx-dg-aside"><button type="button" class="fx-dg-action">编辑</button></div>
+        </article>
+        <article class="fx-ai-card fx-dg-card" data-category="delegate" data-status="草稿" data-content="试卷" data-subject="初中 / 数学" data-grade="七年级下" data-ptype="期末" data-title="lwmtest222">
+          <div class="fx-dg-main">
+            <div class="fx-dg-line1">
+              <span class="fx-dg-title">lwmtest222</span>
+              <span class="fx-dg-status fx-dg-status--draft">草稿</span>
+            </div>
+            <div class="fx-dg-line2">
+              <span>id: 44</span><span>试卷</span><span>初中 / 数学</span><span>七年级下</span><span>期末</span><span>提交时间 2026-04-13 16:24</span>
+            </div>
+          </div>
+          <div class="fx-dg-aside"><button type="button" class="fx-dg-action">编辑</button></div>
+        </article>
+      </div>
+    </div>
+    <p class="fx-ai-pagination" id="fxPageHint">共 6 条数据</p>
+  </div>
+  <script>
+(function () {
+  function getDelegateNameQuery() {
+    var nameInp = document.getElementById('fxDelegateNameSearch');
+    return (nameInp && nameInp.value ? String(nameInp.value) : '').trim().toLowerCase();
+  }
+  function cardMatchesDelegateFilters(card) {
+    var nameQ = getDelegateNameQuery();
+    var title = (card.getAttribute('data-title') || '').toLowerCase();
+    if (nameQ && title.indexOf(nameQ) === -1) return false;
+    function val(id) {
+      var el = document.getElementById(id);
+      return el && el.value ? String(el.value) : '';
+    }
+    var st = val('fxDgFStatus');
+    if (st && (card.getAttribute('data-status') || '') !== st) return false;
+    var ct = val('fxDgFContent');
+    if (ct && (card.getAttribute('data-content') || '') !== ct) return false;
+    var sub = val('fxDgFSubject');
+    if (sub && (card.getAttribute('data-subject') || '') !== sub) return false;
+    var gr = val('fxDgFGrade');
+    if (gr && (card.getAttribute('data-grade') || '') !== gr) return false;
+    var pt = val('fxDgFType');
+    if (pt && (card.getAttribute('data-ptype') || '') !== pt) return false;
+    return true;
+  }
+  function applyChipFilter() {
+    var n = 0;
+    document.querySelectorAll('#fxDelegateCardList .fx-ai-card').forEach(function (card) {
+      var ok = cardMatchesDelegateFilters(card);
+      card.classList.toggle('fx-search-out', !ok);
+      if (ok) n++;
+    });
+    var hint = document.getElementById('fxPageHint');
+    if (hint) hint.textContent = '共 ' + n + ' 条数据';
+  }
+  function bindProgressSearch() {
+    var dgBar = document.getElementById('fxDelegateFilterBar');
+    if (dgBar) {
+      dgBar.querySelectorAll('select').forEach(function (sel) {
+        sel.addEventListener('change', applyChipFilter);
+      });
+    }
+    var dn = document.getElementById('fxDelegateNameSearch');
+    if (dn) {
+      dn.addEventListener('input', applyChipFilter);
+      dn.addEventListener('search', applyChipFilter);
+    }
+  }
+  function bindListClick() {
+    var list = document.getElementById('fxProgressLists');
+    if (!list) return;
+    list.addEventListener('click', function (e) {
+      var dg = e.target.closest('.fx-dg-action');
+      if (dg) {
+        e.preventDefault();
+        var t = (dg.textContent || '').trim();
+        if (t === '查看试卷' || t === '查看题单') window.location.href = '编辑试卷.html';
+        else if (t === '编辑') window.location.href = '申请委托录题页面.html';
+      }
+    });
+  }
+  bindProgressSearch();
+  applyChipFilter();
+  bindListClick();
+})();
+  </script>
+</body>
+</html>

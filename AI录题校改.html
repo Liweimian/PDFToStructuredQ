@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+  <title>AI录题校改 - 飞象星球</title>
+  <link rel="icon" href="https://metis-online.fbcontent.cn/metis-lectio/b0D5c7GTSnFgcExISLjiH.ico">
+  <link href="./编辑试卷_files/4786.9e762905.css" rel="stylesheet">
+  <link href="./编辑试卷_files/5384.33539bdc.css" rel="stylesheet">
+  <link href="./编辑试卷_files/main.a1660310.css" rel="stylesheet">
+  <link href="./编辑试卷_files/717.fb6c704f.chunk.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --fx-primary: #1677ff;
+      --fx-text: rgba(0, 0, 0, 0.88);
+      --fx-text-sec: rgba(0, 0, 0, 0.45);
+      --fx-border: #e8e8e8;
+      --fx-bg: #f5f5f5;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+      font-size: 14px; line-height: 1.5715; color: var(--fx-text); background: var(--fx-bg);
+      display: flex; flex-direction: column; min-height: 100%;
+    }
+    .fx-topbar {
+      flex-shrink: 0; background: #fff; border-bottom: 1px solid var(--fx-border);
+      padding: 0 24px; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .fx-bc { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 0; font-size: 14px; color: var(--fx-text-sec); }
+    .fx-bc a { color: #1677ff; text-decoration: none; }
+    .fx-bc a:hover { color: #69b1ff; }
+    .fx-bc strong { color: var(--fx-text); font-weight: 500; }
+    .fx-bc-sep {
+      display: inline-flex; align-items: center; margin: 0 6px; color: #92979c;
+      user-select: none;
+    }
+    .fx-bc-sep svg { display: block; }
+    .fx-top-actions { display: flex; gap: 12px; flex-shrink: 0; align-items: center; }
+    .fx-delegate-text {
+      padding: 6px 4px; margin: 0; font-size: 14px; line-height: 1.5;
+      border: none; background: transparent; color: rgba(0, 0, 0, 0.55);
+      cursor: pointer; font-family: inherit;
+    }
+    .fx-delegate-text:hover { color: #1677ff; }
+    .fx-btn {
+      padding: 8px 16px; font-size: 14px; border-radius: 6px; border: 1px solid #d9d9d9;
+      background: #fff; cursor: pointer; color: var(--fx-text);
+    }
+    .fx-btn:hover { border-color: #1677ff; color: #1677ff; }
+    .fx-btn-primary { background: #1677ff; color: #fff; border-color: #1677ff; }
+    .fx-btn-primary:hover { background: #69b1ff; color: #fff; border-color: #69b1ff; }
+    .fx-source-label { font-size: 14px; color: var(--fx-text); font-weight: 500; }
+    .fx-source-label strong { font-weight: 600; color: var(--fx-text); word-break: break-all; }
+    .fx-edit-area-label { color: var(--fx-text-sec); font-weight: 500; }
+    .fx-hidden { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
+    .fx-left-h-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    }
+    .fx-work {
+      flex: 1 1 auto; display: grid; grid-template-columns: 50% 50%; width: 100%; gap: 0;
+      min-height: 0; overflow: hidden;
+    }
+    @media (max-width: 1024px) {
+      /* 单列时限制上方预览高度，否则卷面区域被挤到视口外、iframe 内卷面「看不全」 */
+      .fx-work {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(200px, min(45vh, 420px)) minmax(0, 1fr);
+      }
+      .fx-left {
+        min-height: 0;
+        overflow: hidden;
+      }
+      .fx-right {
+        min-height: 0;
+      }
+      .fx-right-h {
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .fx-right-h-tools {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+    .fx-left {
+      display: flex; flex-direction: column; min-height: 0; background: #eceff4;
+      border-right: 1px solid var(--fx-border);
+    }
+    .fx-left-h {
+      flex-shrink: 0; padding: 10px 16px; background: #fff; border-bottom: 1px solid var(--fx-border);
+      font-size: 13px; color: var(--fx-text-sec);
+    }
+    .fx-preview-wrap {
+      flex: 1; position: relative; overflow: auto; min-height: 240px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .fx-preview-scale-box {
+      position: relative;
+      z-index: 1;
+      transform-origin: top center;
+    }
+    /* 源文件区浮动工具条（深底白字，与产品示意一致） */
+    .fx-source-floatbar {
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .fx-source-floatbar > * { pointer-events: auto; }
+    .fx-src-tool--round {
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: #2d2d2d;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      transition: background 0.15s, transform 0.12s;
+    }
+    .fx-src-tool--round:hover {
+      background: #3d3d3d;
+    }
+    .fx-src-tool--round:active {
+      transform: scale(0.96);
+    }
+    .fx-src-tool--round.is-active {
+      background: #1677ff;
+      box-shadow: 0 4px 16px rgba(22, 119, 255, 0.45);
+    }
+    .fx-src-tool--round.is-active:hover {
+      background: #4096ff;
+    }
+    .fx-src-tool--round svg { display: block; }
+    .fx-src-zoom {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 44px;
+      padding: 0 10px 0 8px;
+      border-radius: 999px;
+      background: #2d2d2d;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+    .fx-src-zoom-btn {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      border-radius: 50%;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .fx-src-zoom-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #fff;
+    }
+    .fx-src-zoom-btn--11 {
+      border: none;
+      width: auto;
+      height: auto;
+      padding: 0 4px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .fx-src-zoom-btn--11 svg { display: block; }
+    .fx-src-zoom-track {
+      position: relative;
+      width: 120px;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.22);
+      margin: 0 2px;
+    }
+    .fx-src-zoom-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #69b1ff, #87ceeb);
+      pointer-events: none;
+      width: 50%;
+    }
+    .fx-src-zoom-track input[type='range'] {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      height: 16px;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .fx-src-zoom-thumb {
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 14px;
+      height: 14px;
+      margin-top: -7px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+      pointer-events: none;
+      z-index: 1;
+      transform: translateX(-50%);
+    }
+    .fx-preview-wrap.fx-pan-mode {
+      cursor: grab;
+    }
+    .fx-preview-wrap.fx-pan-mode.fx-pan-dragging {
+      cursor: grabbing;
+      user-select: none;
+    }
+    .fx-pdf-host {
+      position: relative; z-index: 1; display: none; flex-direction: column; align-items: center;
+      min-height: 240px; padding: 16px 12px 32px; background: #3d3d3d; box-sizing: border-box;
+    }
+    .fx-preview-wrap.pdf-js-active .fx-pdf-host { display: flex; }
+    .fx-preview-wrap.pdf-js-active iframe#fileFrame { display: none !important; }
+    .fx-preview-wrap iframe#fileFrame {
+      position: relative; z-index: 1; display: block; width: 100%; border: 0; background: #525659;
+      min-height: 85vh; height: 85vh;
+    }
+    .fx-pdf-host canvas {
+      max-width: 100%; height: auto; vertical-align: top; box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+    }
+    .fx-ocr-layer {
+      position: absolute; inset: 0; z-index: 2; cursor: crosshair;
+    }
+    .fx-ocr-layer.fx-ocr-layer-off {
+      pointer-events: none !important;
+      cursor: default;
+    }
+    .fx-ocr-box {
+      position: absolute; border: 2px solid #1677ff; background: rgba(22,119,255,0.15); pointer-events: none; z-index: 2;
+    }
+    .fx-right {
+      display: flex; flex-direction: column; min-height: 0; min-width: 0;
+      background: var(--fx-bg); overflow: hidden;
+    }
+    .fx-right-h {
+      flex-shrink: 0; padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--fx-border);
+      display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 12px;
+      width: 100%; box-sizing: border-box; min-height: 48px; position: relative; z-index: 4;
+    }
+    .fx-right-h-left {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+      flex: 1; min-width: 0;
+    }
+    .fx-right-h-tools {
+      display: flex; flex-shrink: 0; align-items: center; gap: 4px;
+    }
+    .fx-icon-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; padding: 0; border: none; border-radius: 8px;
+      background: transparent; color: rgba(0, 0, 0, 0.65); cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .fx-icon-btn:hover {
+      background: rgba(22, 119, 255, 0.08); color: #1677ff;
+    }
+    .fx-icon-btn svg { display: block; }
+    .fx-icon-btn-primary {
+      color: #1677ff;
+    }
+    .fx-icon-btn-primary:hover {
+      background: rgba(22, 119, 255, 0.12); color: #0958d9;
+    }
+    .fx-q-count { font-size: 14px; color: var(--fx-text); }
+    .fx-q-count strong { color: #1677ff; font-weight: 600; }
+    .fx-q-list { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 12px; }
+    /* 题答分离：穿透 iframe，便于父级统一捕获「单击打开编辑器」 */
+    body.fx-rec-compose iframe#composeFrame,
+    body.fx-rec-compose iframe#fileFrame {
+      pointer-events: none;
+    }
+    .fx-q-card {
+      background: #fff; border: 1px solid var(--fx-border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+      position: relative; cursor: pointer; transition: box-shadow 0.2s;
+    }
+    .fx-q-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    .fx-q-card:hover .fx-q-hover { opacity: 1; pointer-events: auto; }
+    .fx-q-head { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+    .fx-q-idx {
+      flex-shrink: 0; min-width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.06); border-radius: 4px; font-size: 12px; font-weight: 500;
+    }
+    .fx-q-stem { font-size: 14px; color: var(--fx-text); line-height: 1.6; flex: 1; white-space: pre-wrap; }
+    .fx-q-part { font-size: 12px; color: var(--fx-text-sec); margin-top: 6px; line-height: 1.5; }
+    .fx-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .fx-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; background: rgba(22,119,255,0.1); color: #1677ff; }
+    .fx-tag.fx-tag--dup {
+      background: rgba(250, 173, 20, 0.18);
+      color: #d48806;
+    }
+    .fx-tag.fx-tag--origin {
+      background: linear-gradient(135deg, rgba(22, 119, 255, 0.14), rgba(59, 130, 246, 0.1));
+      color: #0958d9;
+      border: 1px solid rgba(22, 119, 255, 0.28);
+      font-weight: 500;
+    }
+    .fx-tag.fx-tag--ai {
+      background: linear-gradient(135deg, rgba(114, 46, 209, 0.12), rgba(22, 119, 255, 0.1));
+      color: #531dab;
+      border: 1px solid rgba(114, 46, 209, 0.22);
+      font-weight: 500;
+    }
+    .fx-btn-compose {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 36px;
+      padding: 0 16px 0 12px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      color: #fff;
+      background: linear-gradient(145deg, #4096ff 0%, #1677ff 45%, #0958d9 100%);
+      box-shadow:
+        0 2px 8px rgba(22, 119, 255, 0.42),
+        0 0 0 1px rgba(255, 255, 255, 0.22) inset;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+    .fx-btn-compose:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      box-shadow:
+        0 6px 16px rgba(22, 119, 255, 0.48),
+        0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+    }
+    .fx-btn-compose:active {
+      transform: translateY(0);
+      filter: brightness(0.98);
+    }
+    .fx-btn-compose-ic {
+      display: inline-flex;
+      opacity: 0.95;
+    }
+    .fx-btn-compose-ic svg {
+      display: block;
+    }
+    .fx-q-hover {
+      position: absolute; top: 8px; right: 8px; display: flex; flex-wrap: wrap; gap: 2px; justify-content: flex-end;
+      align-items: center; max-width: 85%; opacity: 0; pointer-events: none; transition: opacity 0.15s;
+    }
+    .fx-q-hover button.fx-q-act {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; padding: 0; border: 1px solid #d9d9d9; background: #fff; border-radius: 6px;
+      cursor: pointer; color: rgba(0, 0, 0, 0.65); flex-shrink: 0;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .fx-q-hover button.fx-q-act:hover {
+      border-color: #1677ff; color: #1677ff; background: rgba(22, 119, 255, 0.06);
+    }
+    .fx-q-hover button.fx-q-act svg { display: block; pointer-events: none; }
+    .fx-editor-mask {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 6000; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .fx-editor-mask.open { opacity: 1; pointer-events: auto; }
+    .fx-editor-panel {
+      position: fixed; top: 0; right: 0; width: min(960px, 96vw); height: 100%; background: #fff; z-index: 6001;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.12); transform: translateX(100%); transition: transform 0.28s ease;
+      display: flex; flex-direction: column;
+    }
+    .fx-editor-panel.open { transform: translateX(0); }
+    .fx-editor-head {
+      flex-shrink: 0; padding: 16px 20px; border-bottom: 1px solid var(--fx-border);
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    }
+    .fx-editor-head strong { font-size: 15px; }
+    .fx-editor-body { flex: 1; min-height: 0; margin: 0; padding: 0; overflow: hidden; }
+    .fx-editor-body iframe { display: block; width: 100%; height: 100%; border: 0; }
+    .fx-editor-footer {
+      flex-shrink: 0; padding: 12px 20px; border-top: 1px solid var(--fx-border);
+      display: flex; justify-content: flex-end; align-items: center; gap: 12px; background: #fff;
+    }
+    .fx-mode-switch {
+      display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px;
+      font-size: 13px; color: var(--fx-text);
+    }
+    .fx-mode-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px;
+      border: none; background: transparent; color: var(--fx-text); cursor: pointer;
+      font-size: 13px; font-family: inherit; line-height: 1.4;
+      transition: background 0.15s, color 0.15s;
+    }
+    .fx-mode-btn:hover:not(.is-active) { background: rgba(22, 119, 255, 0.06); color: #1677ff; }
+    .fx-mode-btn.is-active { border: none; background: #e6f4ff; color: #1677ff; font-weight: 500; }
+    .fx-mode-btn-ic { display: inline-flex; opacity: 0.9; }
+    .fx-source-placeholder {
+      display: none; flex: 1; flex-direction: column; align-items: center; justify-content: flex-start;
+      padding: 16px 12px 32px; min-height: 240px; overflow: auto; background: #3d3d3d;
+      -webkit-overflow-scrolling: touch; position: relative; z-index: 1;
+    }
+    .fx-preview-wrap.show-placeholder .fx-source-placeholder { display: flex; }
+    .fx-preview-wrap.show-placeholder .fx-pdf-host { display: none !important; }
+    .fx-preview-wrap.show-placeholder iframe#fileFrame { display: none !important; }
+    .fx-source-placeholder-pages {
+      width: 100%; max-width: 720px; display: flex; flex-direction: column; align-items: center; gap: 0;
+    }
+    .fx-source-page {
+      width: 100%; text-align: center; margin-bottom: 20px;
+    }
+    .fx-source-page:last-child { margin-bottom: 0; }
+    .fx-source-page img {
+      max-width: 100%; height: auto; vertical-align: top; display: inline-block;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45); border-radius: 2px; background: #fff;
+    }
+    .fx-source-page-cap {
+      display: block; margin-top: 8px; font-size: 12px; color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.02em;
+    }
+    /* 题答分离：滚动在外层；iframe 绝对铺满避免未命中 height:100% 时露出灰底遮挡感 */
+    .fx-compose-wrap {
+      flex: 1 1 0;
+      min-height: 0;
+      min-width: 0;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      border-top: none;
+      background: #fff;
+      position: relative;
+    }
+    .fx-compose-scroll {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      min-width: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      background: #fff;
+    }
+    .fx-compose-iframe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: block;
+      margin: 0;
+      border: 0;
+      background: #fff;
+      width: max(100%, 920px);
+      min-width: 920px;
+      height: 100%;
+      min-height: 100%;
+      box-sizing: border-box;
+    }
+    .fx-compose-wrap.fx-hidden { display: none !important; }
+    .fx-q-list.fx-hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header class="fx-topbar">
+    <nav class="fx-bc" aria-label="面包屑">
+      <span style="color:rgba(0,0,0,0.45);">首页</span>
+      <span class="fx-bc-sep" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M0.22 0.22C0.51-0.07 0.99-0.07 1.28 0.22L5.03 3.97C5.32 4.26 5.32 4.74 5.03 5.03L1.28 8.78C0.99 9.07 0.51 9.07 0.22 8.78C-0.07 8.49-0.07 8.01 0.22 7.72L3.44 4.5L0.22 1.28C-0.07 0.99-0.07 0.51 0.22 0.22Z" fill="#92979c" transform="translate(6.75 4.5)"/></svg>
+      </span>
+      <a href="AI智能录题首页.html" target="_top">我的资源</a>
+      <span class="fx-bc-sep" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M0.22 0.22C0.51-0.07 0.99-0.07 1.28 0.22L5.03 3.97C5.32 4.26 5.32 4.74 5.03 5.03L1.28 8.78C0.99 9.07 0.51 9.07 0.22 8.78C-0.07 8.49-0.07 8.01 0.22 7.72L3.44 4.5L0.22 1.28C-0.07 0.99-0.07 0.51 0.22 0.22Z" fill="#92979c" transform="translate(6.75 4.5)"/></svg>
+      </span>
+      <strong>AI录题校对</strong>
+    </nav>
+    <div class="fx-top-actions">
+      <button type="button" class="fx-delegate-text" id="btnDelegateHuman" title="将当前预览中的原文件带入委托表单">效果不好？转交委托录题</button>
+      <button type="button" class="fx-btn-compose" id="btnCompose" title="去组卷 · 进入组卷编辑" aria-label="去组卷，进入组卷编辑试卷">
+        <span class="fx-btn-compose-ic" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-1 16H6v-2h12v2zm0-4H6v-2h7.5a4.5 4.5 0 0 1 0-2H6V7h12v8z" fill="currentColor"/><path d="M16 11h2v2h-2v2h-2v-2h-2v-2h2V9h2v2z" fill="currentColor"/></svg>
+        </span>
+        <span>去组卷</span>
+      </button>
+    </div>
+  </header>
+  <div class="fx-work">
+    <div class="fx-left">
+      <div class="fx-left-h">
+        <div class="fx-left-h-row">
+          <span class="fx-source-label" id="fxSourceFileLine">源文件：<strong id="fxLeftFname">2022-2023学年浙江省温州市苍南县八年级上学期期中考试：科学 (4).pdf</strong></span>
+        </div>
+      </div>
+      <div class="fx-preview-wrap" id="previewWrap">
+        <div class="fx-preview-scale-box" id="previewScaleBox">
+          <div class="fx-source-placeholder" id="fxSourcePlaceholder" aria-hidden="true">
+            <div class="fx-source-placeholder-pages">
+              <div class="fx-source-page">
+                <img src="assets/source-paper-schematic.png" alt="" width="800" height="1200" decoding="async" aria-hidden="true">
+                <span class="fx-source-page-cap">第 1 / 3 页</span>
+              </div>
+              <div class="fx-source-page">
+                <img src="assets/source-paper-schematic.png" alt="" width="800" height="1200" decoding="async" aria-hidden="true">
+                <span class="fx-source-page-cap">第 2 / 3 页</span>
+              </div>
+              <div class="fx-source-page">
+                <img src="assets/source-paper-schematic.png" alt="" width="800" height="1200" decoding="async" aria-hidden="true">
+                <span class="fx-source-page-cap">第 3 / 3 页</span>
+              </div>
+            </div>
+          </div>
+          <div id="pdfRenderHost" class="fx-pdf-host" aria-live="polite"></div>
+          <iframe id="fileFrame" title="原始文件预览"></iframe>
+        </div>
+        <div class="fx-ocr-layer fx-ocr-layer-off" id="ocrLayer"></div>
+        <div class="fx-source-floatbar" aria-label="源文件预览工具">
+          <button type="button" class="fx-src-tool--round" id="btnSrcPan" title="小手拖动" aria-pressed="false" aria-label="小手拖动">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 11.5V8a2 2 0 0 1 4 0v3.5"/><path d="M12.5 8V5.5a2.5 2.5 0 0 1 5 0V10a.5.5 0 0 0 .5.5h.5a2 2 0 0 1 2 2V9.5a2.5 2.5 0 0 1 5 0V16a7 7 0 0 1-7 7h-1.5a7 7 0 0 1-7-7v-1.5a2 2 0 0 1 2-2H9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <div class="fx-src-zoom" role="group" aria-label="放大缩小">
+            <button type="button" class="fx-src-zoom-btn fx-src-zoom-btn--11" id="btnZoom100" title="实际大小 (1:1)" aria-label="实际大小 1 比 1">
+              <svg width="22" height="18" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="1" y="1" width="22" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><text x="12" y="13.5" text-anchor="middle" fill="currentColor" font-size="8" font-weight="700" font-family="system-ui,sans-serif">1:1</text></svg>
+            </button>
+            <button type="button" class="fx-src-zoom-btn" id="btnZoomOut" title="缩小" aria-label="缩小">−</button>
+            <div class="fx-src-zoom-track">
+              <div class="fx-src-zoom-fill" id="zoomFill"></div>
+              <span class="fx-src-zoom-thumb" id="zoomThumb"></span>
+              <input type="range" id="zoomSlider" min="50" max="200" value="100" step="5" aria-valuemin="50" aria-valuemax="200" aria-valuenow="100" aria-label="缩放比例">
+            </div>
+            <button type="button" class="fx-src-zoom-btn" id="btnZoomIn" title="放大" aria-label="放大">+</button>
+          </div>
+          <button type="button" class="fx-src-tool--round" id="btnSrcOcr" title="OCR 识别 · 框选区域" aria-pressed="false" aria-label="OCR 识别">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h3v2H6v3H4V5zm16 0v3h-2V6h-3V4h3a2 2 0 0 1 2 2zm0 14a2 2 0 0 1-2 2h-3v-2h3v-3h2v3zM4 19v-3h2v3h3v2H6a2 2 0 0 1-2-2z" fill="currentColor"/><path d="M8 10h8v6H8v-6zm2 2v2h4v-2h-4z" fill="currentColor" opacity=".85"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="fx-right">
+      <div class="fx-right-h">
+        <div class="fx-right-h-left">
+          <span class="fx-q-count"><span class="fx-edit-area-label">AI 录题内容</span> · 共 <strong id="qTotal">0</strong> 道题</span>
+          <div class="fx-mode-switch" role="tablist" aria-label="录题展示模式">
+            <button type="button" class="fx-mode-btn is-active" id="btnModeCard" role="tab" aria-selected="true" data-mode="card" title="题答合一：题干、答案、解析同屏卡片">
+              <span class="fx-mode-btn-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z" fill="currentColor"/></svg></span>
+              题答合一
+            </button>
+            <button type="button" class="fx-mode-btn" id="btnModeCompose" role="tab" aria-selected="false" data-mode="compose" title="题答分离：卷面区；在工作区内单击任意位置打开题目编辑器">
+              <span class="fx-mode-btn-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" fill="currentColor"/></svg></span>
+              题答分离
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="fx-q-list" id="qList"></div>
+      <div class="fx-compose-wrap fx-hidden" id="composeWrap" aria-hidden="true">
+        <div class="fx-compose-scroll">
+          <iframe class="fx-compose-iframe" id="composeFrame" title="编辑试卷（嵌入卷面区）" src="about:blank"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="fx-editor-mask" id="edMask"></div>
+  <aside class="fx-editor-panel" id="edPanel" aria-hidden="true">
+    <div class="fx-editor-head">
+      <strong id="edTitle">编辑题目</strong>
+      <button type="button" class="fx-btn" id="edClose">关闭</button>
+    </div>
+    <div class="fx-editor-body">
+      <iframe id="edFrame" title="题目编辑器" src="about:blank"></iframe>
+    </div>
+    <div class="fx-editor-footer">
+      <button type="button" class="fx-btn" id="edCancel">取消</button>
+      <button type="button" class="fx-btn fx-btn-primary" id="edConfirm">确定</button>
+    </div>
+  </aside>
+  <script>
+(function () {
+  var FX_DEFAULT_SOURCE_NAME = '2022-2023学年浙江省温州市苍南县八年级上学期期中考试：科学 (4).pdf';
+  var OPT = {
+    contentType: ['试卷', '题单'],
+    subject: ['初中 / 数学', '初中 / 英语', '高中 / 物理', '高中 / 数学', '小学 / 语文'],
+    grade: ['七年级下', '八年级上', '九年级上', '高一', '高二', '高三'],
+    paperType: ['单元测', '期中', '期末', '综合练习', '模拟卷'],
+    schoolYear: ['2024 学年', '2025 学年', '2026 学年'],
+    region: ['未识别地区', '北京市', '上海市', '广东省']
+  };
+  function mockOcrFromName(name) {
+    var base = { fileName: name || '', ocrMock: true };
+    if (/物理|力学|压轴/.test(name)) {
+      return Object.assign(base, {
+        contentType: '试卷', subject: '高中 / 物理', grade: '高三', paperType: '综合练习', schoolYear: '2025 学年', region: '未识别地区'
+      });
+    }
+    if (/英语|English/i.test(name)) {
+      return Object.assign(base, {
+        contentType: '试卷', subject: '初中 / 英语', grade: '八年级上', paperType: '期中', schoolYear: '2025 学年', region: '未识别地区'
+      });
+    }
+    return Object.assign(base, {
+      contentType: '试卷', subject: '初中 / 数学', grade: '七年级下', paperType: '单元测', schoolYear: '2025 学年', region: '未识别地区'
+    });
+  }
+  function loadMeta() {
+    var m = {};
+    try {
+      m = JSON.parse(sessionStorage.getItem('fx_ai_sheet_meta') || '{}');
+    } catch (e) {}
+    return m;
+  }
+  function currentMetaFromUi() {
+    var base = loadMeta();
+    var fnEl = document.getElementById('fxLeftFname');
+    var fn = fnEl ? fnEl.textContent.trim() : '';
+    if (fn === '—' || !fn) fn = FX_DEFAULT_SOURCE_NAME;
+    return {
+      contentType: base.contentType || OPT.contentType[0],
+      subject: base.subject || OPT.subject[0],
+      grade: base.grade || OPT.grade[0],
+      paperType: base.paperType || OPT.paperType[0],
+      schoolYear: base.schoolYear || OPT.schoolYear[1],
+      region: base.region || OPT.region[0],
+      fileName: fn || base.fileName || '',
+      ocrMock: true
+    };
+  }
+  var IDB_NAME = 'fx_ai_handoff_v1';
+  var IDB_STORE = 'files';
+  function idbPutDelegateFile(file, cb) {
+    var req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = function () {
+      var db = req.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+    };
+    req.onerror = function () { if (cb) cb(false); };
+    req.onsuccess = function () {
+      var db = req.result;
+      try {
+        var tx = db.transaction(IDB_STORE, 'readwrite');
+        tx.objectStore(IDB_STORE).put(file, 'delegate_pending');
+        tx.oncomplete = function () { if (cb) cb(true); };
+        tx.onerror = function () { if (cb) cb(false); };
+      } catch (err) {
+        if (cb) cb(false);
+      }
+    };
+  }
+  function goDelegateHuman() {
+    var meta = currentMetaFromUi();
+    saveMeta(meta);
+    var url = sessionStorage.getItem('fx_ai_preview_url');
+    function navigate() {
+      sessionStorage.setItem('fx_delegate_sheet_meta', JSON.stringify(meta));
+      sessionStorage.setItem('fx_delegate_from_ai', '1');
+      window.location.href = '申请委托录题页面.html';
+    }
+    if (!url) {
+      navigate();
+      return;
+    }
+    fetch(url)
+      .then(function (r) { return r.blob(); })
+      .then(function (blob) {
+        var name = meta.fileName || 'document.pdf';
+        if (name && !/\.(pdf|doc|docx)$/i.test(name)) name += '.pdf';
+        var f = new File([blob], name, { type: blob.type || 'application/octet-stream' });
+        idbPutDelegateFile(f, function () { navigate(); });
+      })
+      .catch(function () { navigate(); });
+  }
+  function saveMeta(m) {
+    sessionStorage.setItem('fx_ai_sheet_meta', JSON.stringify(m));
+  }
+  function initMetaFilename() {
+    var meta = loadMeta();
+    if (!(meta.fileName || '').trim()) {
+      meta.fileName = FX_DEFAULT_SOURCE_NAME;
+      saveMeta(meta);
+    }
+    var lf = document.getElementById('fxLeftFname');
+    if (lf) {
+      lf.textContent = (meta.fileName || FX_DEFAULT_SOURCE_NAME).trim();
+    }
+  }
+  function applyPreviewUrl(url) {
+    var frame = document.getElementById('fileFrame');
+    var host = document.getElementById('pdfRenderHost');
+    var wrap = document.getElementById('previewWrap');
+    var ph = document.getElementById('fxSourcePlaceholder');
+    if (wrap) wrap.classList.remove('pdf-js-active');
+    if (host) {
+      host.innerHTML = '';
+      host.style.display = 'none';
+    }
+    if (!url) {
+      if (wrap) wrap.classList.add('show-placeholder');
+      if (ph) ph.setAttribute('aria-hidden', 'false');
+      if (frame) {
+        frame.removeAttribute('src');
+        frame.removeAttribute('srcdoc');
+        frame.style.display = 'none';
+      }
+      return;
+    }
+    if (wrap) wrap.classList.remove('show-placeholder');
+    if (ph) ph.setAttribute('aria-hidden', 'true');
+    if (frame) {
+      frame.style.display = 'block';
+      frame.removeAttribute('srcdoc');
+      frame.src = url;
+    }
+  }
+  function renderPdfWithPdfJs(arrayBuffer) {
+    var host = document.getElementById('pdfRenderHost');
+    var frame = document.getElementById('fileFrame');
+    var wrap = document.getElementById('previewWrap');
+    var ph = document.getElementById('fxSourcePlaceholder');
+    if (!host || typeof pdfjsLib === 'undefined') return Promise.reject(new Error('pdfjs'));
+    if (wrap) wrap.classList.remove('show-placeholder');
+    if (ph) ph.setAttribute('aria-hidden', 'true');
+    host.innerHTML = '<p style="color:#fff;margin:20px;font-size:14px;">正在渲染 PDF 预览…</p>';
+    host.style.display = 'flex';
+    if (frame) frame.style.display = 'none';
+    if (wrap) wrap.classList.add('pdf-js-active');
+    var u8 = new Uint8Array(arrayBuffer);
+    return pdfjsLib.getDocument({ data: u8 }).promise.then(function (pdf) {
+      host.innerHTML = '';
+      var total = pdf.numPages;
+      var scale = Math.min(1.5, (window.innerWidth < 900 ? 1.05 : 1.35));
+      var seq = Promise.resolve();
+      for (var pn = 1; pn <= total; pn++) {
+        (function (pi) {
+          seq = seq.then(function () {
+            return pdf.getPage(pi).then(function (page) {
+              var viewport = page.getViewport({ scale: scale });
+              var canvas = document.createElement('canvas');
+              var ctx = canvas.getContext('2d');
+              canvas.width = viewport.width;
+              canvas.height = viewport.height;
+              var block = document.createElement('div');
+              block.style.cssText = 'margin-bottom:20px;text-align:center';
+              block.appendChild(canvas);
+              var cap = document.createElement('div');
+              cap.textContent = '第 ' + pi + ' / ' + total + ' 页';
+              cap.style.cssText = 'color:rgba(255,255,255,0.8);font-size:12px;margin-top:8px';
+              block.appendChild(cap);
+              host.appendChild(block);
+              return page.render({ canvasContext: ctx, viewport: viewport }).promise;
+            });
+          });
+        })(pn);
+      }
+      return seq;
+    });
+  }
+  function shouldUsePdfJs(url) {
+    if (!url || typeof pdfjsLib === 'undefined') return false;
+    var meta = loadMeta();
+    var fn = (meta && meta.fileName) || '';
+    if (/\.(doc|docx)$/i.test(fn)) return false;
+    /* 图片走 iframe / 浏览器预览，避免误用 PDF.js 解析 */
+    if (/\.(png|jpe?g|gif|webp|bmp)$/i.test(fn)) return false;
+    return true;
+  }
+  function tryPdfJsPreview(url) {
+    if (!shouldUsePdfJs(url)) return Promise.resolve(false);
+    return fetch(url)
+      .then(function (r) {
+        if (!r.ok) throw new Error('network');
+        return r.arrayBuffer();
+      })
+      .then(function (buf) {
+        return renderPdfWithPdfJs(buf);
+      })
+      .then(function () { return true; })
+      .catch(function () { return false; });
+  }
+  function bootPreview(prevUrl) {
+    if (prevUrl && typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      tryPdfJsPreview(prevUrl).then(function (ok) {
+        if (!ok) applyPreviewUrl(prevUrl);
+      });
+    } else {
+      applyPreviewUrl(prevUrl || null);
+    }
+  }
+  function loadCompareFileFromIdb(cb) {
+    var req = indexedDB.open('fx_ai_handoff_v1', 1);
+    req.onupgradeneeded = function () {
+      var db = req.result;
+      if (!db.objectStoreNames.contains('files')) db.createObjectStore('files');
+    };
+    req.onerror = function () { cb(null); };
+    req.onsuccess = function () {
+      var db = req.result;
+      try {
+        if (!db.objectStoreNames.contains('files')) {
+          cb(null);
+          return;
+        }
+        var tx = db.transaction('files', 'readwrite');
+        var st = tx.objectStore('files');
+        var g = st.get('ai_compare_pending');
+        g.onsuccess = function () {
+          var file = g.result;
+          if (file == null) {
+            cb(null);
+            return;
+          }
+          var delReq = st.delete('ai_compare_pending');
+          delReq.onsuccess = function () { cb(file); };
+          delReq.onerror = function () { cb(file); };
+        };
+        g.onerror = function () { cb(null); };
+      } catch (e) {
+        cb(null);
+      }
+    };
+  }
+  initMetaFilename();
+  /* 不依赖 fx_ai_compare_handoff：部分环境下 sessionStorage 未随跳转带上，仍应从 IDB 取回文件 */
+  sessionStorage.removeItem('fx_ai_compare_handoff');
+  loadCompareFileFromIdb(function (file) {
+    if (!file) {
+      bootPreview(sessionStorage.getItem('fx_ai_preview_url') || null);
+      return;
+    }
+    try {
+      var old = sessionStorage.getItem('fx_ai_preview_url');
+      if (old) URL.revokeObjectURL(old);
+    } catch (e) {}
+    if (file.name) {
+      var meta = loadMeta();
+      meta.fileName = file.name;
+      saveMeta(meta);
+      var lf = document.getElementById('fxLeftFname');
+      if (lf) lf.textContent = file.name;
+    }
+    var nu = URL.createObjectURL(file);
+    sessionStorage.setItem('fx_ai_preview_url', nu);
+    bootPreview(nu);
+  });
+
+  var ocrSelectMode = false;
+  var layer = document.getElementById('ocrLayer');
+  var previewWrap = document.getElementById('previewWrap');
+  var previewScaleBox = document.getElementById('previewScaleBox');
+  var btnSrcPan = document.getElementById('btnSrcPan');
+  var btnSrcOcr = document.getElementById('btnSrcOcr');
+  var zoomSlider = document.getElementById('zoomSlider');
+  var zoomFill = document.getElementById('zoomFill');
+  var zoomThumb = document.getElementById('zoomThumb');
+  var panMode = false;
+  var panDrag = false;
+  var panStart = { x: 0, y: 0, sl: 0, st: 0 };
+  var previewZoom = 1;
+  var useZoomCss = (function () {
+    var el = document.createElement('div');
+    el.style.cssText = 'zoom:2';
+    return el.style.zoom === '2';
+  })();
+
+  function setPanMode(on) {
+    panMode = !!on;
+    if (previewWrap) {
+      previewWrap.classList.toggle('fx-pan-mode', panMode);
+      if (!panMode) previewWrap.classList.remove('fx-pan-dragging');
+    }
+    if (btnSrcPan) {
+      btnSrcPan.classList.toggle('is-active', panMode);
+      btnSrcPan.setAttribute('aria-pressed', panMode ? 'true' : 'false');
+    }
+  }
+
+  function updateZoomUi() {
+    if (!zoomSlider) return;
+    var z = Math.max(0.5, Math.min(2, previewZoom));
+    var pct = Math.round(z * 100);
+    pct = Math.max(50, Math.min(200, pct));
+    zoomSlider.value = String(pct);
+    zoomSlider.setAttribute('aria-valuenow', String(pct));
+    var t = Math.log(z / 0.5) / Math.log(4);
+    if (zoomFill) zoomFill.style.width = (t * 100) + '%';
+    if (zoomThumb) zoomThumb.style.left = (t * 100) + '%';
+  }
+
+  function applyPreviewZoom(z) {
+    previewZoom = Math.max(0.5, Math.min(2, z));
+    if (!previewScaleBox) return;
+    if (useZoomCss) {
+      previewScaleBox.style.zoom = Math.round(previewZoom * 100) + '%';
+      previewScaleBox.style.transform = '';
+    } else {
+      previewScaleBox.style.zoom = '';
+      previewScaleBox.style.transform = 'scale(' + previewZoom + ')';
+      previewScaleBox.style.transformOrigin = 'top center';
+    }
+    updateZoomUi();
+  }
+
+  function setOcrSelectMode(on) {
+    ocrSelectMode = !!on;
+    if (layer) layer.classList.toggle('fx-ocr-layer-off', !ocrSelectMode);
+    if (btnSrcOcr) {
+      btnSrcOcr.classList.toggle('is-active', ocrSelectMode);
+      btnSrcOcr.setAttribute('aria-pressed', ocrSelectMode ? 'true' : 'false');
+      btnSrcOcr.title = ocrSelectMode ? '退出 OCR 框选' : 'OCR 识别 · 框选区域';
+    }
+    if (ocrSelectMode && panMode) setPanMode(false);
+  }
+
+  if (btnSrcPan) {
+    btnSrcPan.addEventListener('click', function () {
+      if (ocrSelectMode) setOcrSelectMode(false);
+      setPanMode(!panMode);
+    });
+  }
+  if (btnSrcOcr) btnSrcOcr.addEventListener('click', function () { setOcrSelectMode(!ocrSelectMode); });
+
+  if (zoomSlider) {
+    zoomSlider.addEventListener('input', function () {
+      applyPreviewZoom(parseInt(zoomSlider.value, 10) / 100);
+    });
+  }
+  var btnZi = document.getElementById('btnZoomIn');
+  var btnZo = document.getElementById('btnZoomOut');
+  var btnZ100 = document.getElementById('btnZoom100');
+  if (btnZi) btnZi.addEventListener('click', function () { applyPreviewZoom(previewZoom + 0.1); });
+  if (btnZo) btnZo.addEventListener('click', function () { applyPreviewZoom(previewZoom - 0.1); });
+  if (btnZ100) btnZ100.addEventListener('click', function () { applyPreviewZoom(1); });
+
+  if (previewWrap) {
+    previewWrap.addEventListener('mousedown', function (e) {
+      if (!panMode || ocrSelectMode) return;
+      if (e.button !== 0) return;
+      if (e.target.closest && e.target.closest('.fx-source-floatbar')) return;
+      panDrag = true;
+      panStart.x = e.clientX;
+      panStart.y = e.clientY;
+      panStart.sl = previewWrap.scrollLeft;
+      panStart.st = previewWrap.scrollTop;
+      previewWrap.classList.add('fx-pan-dragging');
+      e.preventDefault();
+    });
+  }
+  document.addEventListener('mousemove', function (e) {
+    if (!panDrag || !previewWrap) return;
+    previewWrap.scrollLeft = panStart.sl - (e.clientX - panStart.x);
+    previewWrap.scrollTop = panStart.st - (e.clientY - panStart.y);
+  });
+  document.addEventListener('mouseup', function () {
+    if (!panDrag || !previewWrap) return;
+    panDrag = false;
+    previewWrap.classList.remove('fx-pan-dragging');
+  });
+
+  applyPreviewZoom(1);
+
+  var questions = [
+    {
+      stem: '1.（2分）苍南县水资源总量较为丰富，但人均水资源占有量少，属于中度缺水地区。下列关于水资源保护和利用说法正确的是（）。\n\nA. 禁用农药、化肥\n\nB. 采用低流量的淋浴喷头\n\nC. 洗手时一直开着水龙头\n\nD. 大量抽取地下水',
+      answer: 'B',
+      explain: '低流量淋浴喷头可节约用水；完全禁用农药化肥不现实；洗手长流水、过度抽取地下水均不利于水资源保护。',
+      tags: ['飞象原题']
+    },
+    {
+      stem: '2.（2分）下列物质中，属于溶液的是（）。\n\nA. 生理盐水          B. 豆浆           C. 蒸馏水          D. 血液',
+      answer: 'A',
+      explain: '生理盐水是氯化钠溶于水形成的均一、稳定混合物，属于溶液。',
+      tags: ['AI识别']
+    }
+  ];
+  var recMode = 'card';
+  var FX_Q_ACT_ICONS = {
+    edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm14.71-9.67a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>',
+    up: '<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>',
+    down: '<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>',
+    ins: '<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>',
+    del: '<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>'
+  };
+  function renderQs() {
+    var el = document.getElementById('qList');
+    el.innerHTML = '';
+    questions.forEach(function (q, i) {
+      var card = document.createElement('div');
+      card.className = 'fx-q-card';
+      var idx = document.createElement('span');
+      idx.className = 'fx-q-idx';
+      idx.textContent = String(i + 1);
+      var stem = document.createElement('div');
+      stem.className = 'fx-q-stem';
+      stem.textContent = q.stem;
+      var head = document.createElement('div');
+      head.className = 'fx-q-head';
+      head.appendChild(idx);
+      head.appendChild(stem);
+      card.appendChild(head);
+      var p1 = document.createElement('div');
+      p1.className = 'fx-q-part';
+      p1.textContent = '答案：' + q.answer;
+      card.appendChild(p1);
+      var p2 = document.createElement('div');
+      p2.className = 'fx-q-part';
+      p2.textContent = '解析：' + (q.explain || '—');
+      card.appendChild(p2);
+      if (q.tags && q.tags.length) {
+        var tags = document.createElement('div');
+        tags.className = 'fx-tags';
+        q.tags.forEach(function (t) {
+          var sp = document.createElement('span');
+          var mod =
+            t === '飞象原题' ? ' fx-tag--origin' : t === 'AI识别' ? ' fx-tag--ai' : t === '重复题' ? ' fx-tag--dup' : '';
+          sp.className = 'fx-tag' + mod;
+          sp.textContent = t;
+          tags.appendChild(sp);
+        });
+        card.appendChild(tags);
+      }
+      var hover = document.createElement('div');
+      hover.className = 'fx-q-hover';
+      [
+        ['edit', '编辑题目'],
+        ['up', '上移'],
+        ['down', '下移'],
+        ['ins', '插入'],
+        ['del', '删除']
+      ].forEach(function (x) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'fx-q-act';
+        b.setAttribute('data-a', x[0]);
+        b.setAttribute('title', x[1]);
+        b.setAttribute('aria-label', x[1]);
+        b.innerHTML = FX_Q_ACT_ICONS[x[0]] || '';
+        hover.appendChild(b);
+      });
+      card.appendChild(hover);
+      card.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-a]');
+        if (btn) {
+          e.stopPropagation();
+          var a = btn.getAttribute('data-a');
+          if (a === 'edit') openEditor();
+          if (a === 'up') move(i, -1);
+          if (a === 'down') move(i, 1);
+          if (a === 'ins') insertAfter(i);
+          if (a === 'del') removeAt(i);
+          return;
+        }
+        openEditor();
+      });
+      el.appendChild(card);
+    });
+  }
+
+  var COMPOSE_PAGE_SRC = '编辑试卷.html';
+
+  function refreshRightPanel() {
+    var qt = document.getElementById('qTotal');
+    if (qt) qt.textContent = String(questions.length);
+    if (recMode === 'card') renderQs();
+  }
+
+  function setRecMode(mode) {
+    recMode = mode;
+    var qList = document.getElementById('qList');
+    var cw = document.getElementById('composeWrap');
+    var cf = document.getElementById('composeFrame');
+    var btnCard = document.getElementById('btnModeCard');
+    var btnCompose = document.getElementById('btnModeCompose');
+    var card = mode === 'card';
+    document.body.classList.toggle('fx-rec-compose', !card);
+    if (btnCard) {
+      btnCard.classList.toggle('is-active', card);
+      btnCard.setAttribute('aria-selected', card ? 'true' : 'false');
+    }
+    if (btnCompose) {
+      btnCompose.classList.toggle('is-active', !card);
+      btnCompose.setAttribute('aria-selected', !card ? 'true' : 'false');
+    }
+    if (qList) {
+      if (card) {
+        qList.classList.remove('fx-hidden');
+      } else {
+        qList.classList.add('fx-hidden');
+        qList.innerHTML = '';
+      }
+    }
+    if (cw) {
+      cw.classList.toggle('fx-hidden', card);
+      cw.setAttribute('aria-hidden', card ? 'true' : 'false');
+    }
+    if (!card && cf) {
+      var prev = cf.getAttribute('data-compose-src') || '';
+      if (prev !== COMPOSE_PAGE_SRC) {
+        cf.src = COMPOSE_PAGE_SRC;
+        cf.setAttribute('data-compose-src', COMPOSE_PAGE_SRC);
+      }
+    }
+    refreshRightPanel();
+  }
+
+  function move(i, delta) {
+    var j = i + delta;
+    if (j < 0 || j >= questions.length) return;
+    var t = questions[i];
+    questions[i] = questions[j];
+    questions[j] = t;
+    refreshRightPanel();
+  }
+
+  function insertAfter(i) {
+    questions.splice(i + 1, 0, {
+      stem: '新题目（请编辑）',
+      answer: '',
+      explain: '',
+      tags: ['待编辑']
+    });
+    refreshRightPanel();
+  }
+
+  function removeAt(i) {
+    if (!window.confirm('确定删除该题？')) return;
+    questions.splice(i, 1);
+    refreshRightPanel();
+  }
+
+  function openEditor() {
+    document.getElementById('edTitle').textContent = '编辑题目';
+    var fr = document.getElementById('edFrame');
+    fr.src = '新建题目.html?fx_embed=1';
+    document.getElementById('edMask').classList.add('open');
+    document.getElementById('edPanel').classList.add('open');
+    document.getElementById('edPanel').setAttribute('aria-hidden', 'false');
+  }
+
+  function closeEditor() {
+    document.getElementById('edMask').classList.remove('open');
+    document.getElementById('edPanel').classList.remove('open');
+    document.getElementById('edPanel').setAttribute('aria-hidden', 'true');
+    var fr = document.getElementById('edFrame');
+    if (fr) fr.src = 'about:blank';
+  }
+
+  document.getElementById('edClose').addEventListener('click', closeEditor);
+  document.getElementById('edCancel').addEventListener('click', closeEditor);
+  document.getElementById('edConfirm').addEventListener('click', closeEditor);
+  document.getElementById('edMask').addEventListener('click', closeEditor);
+  document.getElementById('edPanel').addEventListener('click', function (e) { e.stopPropagation(); });
+
+  document.getElementById('btnModeCard').addEventListener('click', function () {
+    if (recMode === 'card') return;
+    setRecMode('card');
+  });
+  document.getElementById('btnModeCompose').addEventListener('click', function () {
+    if (recMode === 'compose') return;
+    setRecMode('compose');
+  });
+
+  var edPanel = document.getElementById('edPanel');
+  var fxWork = document.querySelector('.fx-work');
+  function editorIsOpen() {
+    return edPanel && edPanel.classList.contains('open');
+  }
+  if (fxWork) {
+    fxWork.addEventListener('click', function (e) {
+      if (recMode !== 'compose') return;
+      if (ocrSelectMode) return;
+      if (editorIsOpen()) return;
+      var t = e.target;
+      if (t.closest('.fx-left-h') || t.closest('.fx-right-h')) return;
+      if (t.closest('button, a, input, textarea, select, label')) return;
+      openEditor();
+    }, true);
+  }
+
+  document.getElementById('btnCompose').addEventListener('click', function () {
+    window.location.href = '去组卷编辑试卷.html';
+  });
+  var btnDh = document.getElementById('btnDelegateHuman');
+  if (btnDh) btnDh.addEventListener('click', goDelegateHuman);
+
+  var drag = null;
+  if (layer && previewWrap) {
+    layer.addEventListener('mousedown', function (e) {
+      if (!ocrSelectMode || e.button !== 0) return;
+      var r = previewWrap.getBoundingClientRect();
+      drag = { x0: e.clientX - r.left + previewWrap.scrollLeft, y0: e.clientY - r.top + previewWrap.scrollTop, el: document.createElement('div') };
+      drag.el.className = 'fx-ocr-box';
+      drag.el.style.left = drag.x0 + 'px';
+      drag.el.style.top = drag.y0 + 'px';
+      drag.el.style.width = '0';
+      drag.el.style.height = '0';
+      previewWrap.appendChild(drag.el);
+      e.preventDefault();
+    });
+  }
+  document.addEventListener('mousemove', function (e) {
+    if (!drag || !previewWrap) return;
+    var r = previewWrap.getBoundingClientRect();
+    var x = e.clientX - r.left + previewWrap.scrollLeft;
+    var y = e.clientY - r.top + previewWrap.scrollTop;
+    var l = Math.min(x, drag.x0);
+    var t = Math.min(y, drag.y0);
+    var w = Math.abs(x - drag.x0);
+    var h = Math.abs(y - drag.y0);
+    drag.el.style.left = l + 'px';
+    drag.el.style.top = t + 'px';
+    drag.el.style.width = w + 'px';
+    drag.el.style.height = h + 'px';
+  });
+  document.addEventListener('mouseup', function () {
+    drag = null;
+  });
+
+  setRecMode('card');
+})();
+  </script>
+</body>
+</html>
