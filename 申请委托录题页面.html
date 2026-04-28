@@ -43,9 +43,6 @@
     .fx-field { display: flex; flex-direction: column; gap: 6px; }
     .fx-field.fx-span-2 { grid-column: 1 / -1; }
     .fx-field label { font-size: 13px; color: var(--fx-text-sec); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .fx-field label .fx-ai-tag {
-      font-size: 11px; font-weight: 500; color: #1677ff; background: rgba(22,119,255,0.1); padding: 1px 8px; border-radius: 4px;
-    }
     .fx-field input[type="text"],
     .fx-field select, .fx-field textarea {
       width: 100%; padding: 8px 11px; font-size: 14px; border: 1px solid #d9d9d9; border-radius: 6px; color: var(--fx-text);
@@ -95,7 +92,6 @@
         <div class="fx-card">
           <h2>卷面文件</h2>
           <div class="fx-file-row" id="fxFileRow">
-            <span class="fx-ai-tag">AI 同步</span>
             <span id="fxFileLabel" class="fx-file-name">未检测到文件，可在下方重新选择</span>
             <button type="button" class="fx-btn" id="fxPreviewBtn" hidden>预览</button>
             <label class="fx-btn" for="fxRefile">重新选择文件</label>
@@ -107,31 +103,31 @@
           <h2>卷面信息</h2>
           <div class="fx-form-grid">
             <div class="fx-field fx-span-2">
-              <label for="fxD_title">试卷 / 资源名称 <span class="fx-ai-tag">AI</span></label>
+              <label for="fxD_title">试卷 / 资源名称</label>
               <input type="text" id="fxD_title" name="title" placeholder="由文件名与识别结果生成" />
             </div>
             <div class="fx-field">
-              <label for="fxD_contentType">内容类型 <span class="fx-ai-tag">AI</span></label>
+              <label for="fxD_contentType">内容类型</label>
               <select id="fxD_contentType" name="contentType"></select>
             </div>
             <div class="fx-field">
-              <label for="fxD_subject">学段学科 <span class="fx-ai-tag">AI</span></label>
+              <label for="fxD_subject">学段学科</label>
               <select id="fxD_subject" name="subject"></select>
             </div>
             <div class="fx-field">
-              <label for="fxD_grade">年级 <span class="fx-ai-tag">AI</span></label>
+              <label for="fxD_grade">年级</label>
               <select id="fxD_grade" name="grade"></select>
             </div>
             <div class="fx-field">
-              <label for="fxD_paper">试卷类型 <span class="fx-ai-tag">AI</span></label>
+              <label for="fxD_paper">试卷类型</label>
               <select id="fxD_paper" name="paperType"></select>
             </div>
             <div class="fx-field">
-              <label for="fxD_year">学年 <span class="fx-ai-tag">AI</span></label>
+              <label for="fxD_year">学年</label>
               <select id="fxD_year" name="schoolYear"></select>
             </div>
             <div class="fx-field">
-              <label for="fxD_region">地区 <span class="fx-ai-tag">AI</span></label>
+              <label for="fxD_region">地区</label>
               <select id="fxD_region" name="region"></select>
             </div>
           </div>
@@ -141,7 +137,7 @@
           <h2>备注</h2>
           <div class="fx-field">
             <label for="fxD_note" class="fx-hidden">备注内容</label>
-            <textarea id="fxD_note" name="remark" rows="4" placeholder="可选；AI 将根据卷面信息预填，可自行修改" aria-label="备注"></textarea>
+            <textarea id="fxD_note" name="remark" rows="4" placeholder="可选；将根据卷面信息预填，可自行修改" aria-label="备注"></textarea>
           </div>
         </div>
 
@@ -201,7 +197,7 @@
     return String(name).replace(/\.(pdf|docx?|png|jpe?g)$/i, '');
   }
 
-  /** 与录题列表 mockOcrMeta 一致的演示智能填充；备注由 AI 根据卷面预填 */
+  /** 与录题列表 mockOcrMeta 一致的演示智能填充；备注根据卷面预填 */
   function aiFillAll(m, file) {
     var fileName = (file && file.name) || m.fileName || '';
     var baseTitle = stripExt(fileName) || '未命名试卷';
@@ -220,7 +216,7 @@
     var pt = m.paperType || '';
     var reg = m.region || '';
     var note =
-      '【AI 智能预填】已根据上传文件「' + (fileName || '—') + '」识别卷面信息：' +
+      '已根据上传文件「' + (fileName || '—') + '」识别卷面信息：' +
       sub + ' · ' + gr + ' · ' + pt + ' · ' + reg +
       '。请核对卷面信息与附件一致；若有特殊排版、划题范围或其他说明，请在此补充。';
     document.getElementById('fxD_note').value = note;

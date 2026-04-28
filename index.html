@@ -2075,6 +2075,16 @@ body.fx-ai-workspace-default .fx-my-data-ic svg { display: block; }
     myData.addEventListener('click', function () {
       window.location.href = '我的创建.html';
     });
+    var myShare = document.createElement('button');
+    myShare.type = 'button';
+    myShare.id = 'fxMyShareBtn';
+    myShare.className = 'fx-my-data-btn';
+    myShare.setAttribute('aria-label', '我的分享');
+    myShare.innerHTML =
+      '<span class="fx-my-data-ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="5" r="2.4" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="12" r="2.4" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="19" r="2.4" stroke="currentColor" stroke-width="1.5"/><path d="M8.1 10.85l7.8-4.55M8.1 13.15l7.8 4.55" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="fx-my-data-txt">我的分享</span>';
+    myShare.addEventListener('click', function () {
+      window.location.href = '我的分享.html';
+    });
     var taskWrap = document.createElement('div');
     taskWrap.className = 'fx-header-task-wrap';
     taskWrap.innerHTML =
@@ -2112,8 +2122,9 @@ body.fx-ai-workspace-default .fx-my-data-ic svg { display: block; }
         closeTaskMenu();
       });
     });
-    wrap.appendChild(myData);
     wrap.appendChild(taskWrap);
+    wrap.appendChild(myData);
+    wrap.appendChild(myShare);
     extra.appendChild(wrap);
   }
   function bindTabs() {

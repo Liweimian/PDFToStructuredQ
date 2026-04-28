@@ -297,12 +297,38 @@
     }
     .fx-q-count { font-size: 14px; color: var(--fx-text); }
     .fx-q-count strong { color: #1677ff; font-weight: 600; }
-    .fx-q-list { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 12px; }
-    /* 题答分离：穿透 iframe，便于父级统一捕获「单击打开编辑器」 */
-    body.fx-rec-compose iframe#composeFrame,
-    body.fx-rec-compose iframe#fileFrame {
-      pointer-events: none;
+    .fx-q-hint {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 999px;
+      font-size: 12px; line-height: 1.4; color: #874d00;
+      background: #fff7e6; border: 1px solid #ffe7ba;
     }
+    .fx-q-hint-ic { display: inline-flex; color: #fa8c16; }
+    .fx-q-hint-ic svg { display: block; }
+    .fx-q-list { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 12px; }
+    .fx-q-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 14px; padding: 60px 20px; min-height: 280px;
+      text-align: center; color: var(--fx-text-sec);
+    }
+    .fx-q-empty-ic {
+      width: 88px; height: 88px; border-radius: 50%; background: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: #bfbfbf; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+    .fx-q-empty-ic svg { display: block; }
+    .fx-q-empty-title { font-size: 14px; color: rgba(0, 0, 0, 0.65); }
+    .fx-q-empty-sub { font-size: 12px; color: var(--fx-text-sec); margin-top: -6px; }
+    .fx-q-empty-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 18px; font-size: 14px; font-weight: 500;
+      border: 1px solid #1677ff; border-radius: 6px;
+      background: #1677ff; color: #fff; cursor: pointer;
+      font-family: inherit; transition: background 0.15s, border-color 0.15s;
+    }
+    .fx-q-empty-btn:hover { background: #4096ff; border-color: #4096ff; }
+    .fx-q-empty-btn:active { background: #0958d9; border-color: #0958d9; }
+    .fx-q-empty-btn svg { display: block; }
     .fx-q-card {
       background: #fff; border: 1px solid var(--fx-border); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
       position: relative; cursor: pointer; transition: box-shadow 0.2s;
@@ -365,6 +391,25 @@
       transform: translateY(0);
       filter: brightness(0.98);
     }
+    .fx-btn-compose--ghost {
+      color: #1677ff;
+      background: #fff;
+      box-shadow:
+        0 0 0 1px rgba(22, 119, 255, 0.55) inset,
+        0 1px 2px rgba(22, 119, 255, 0.08);
+    }
+    .fx-btn-compose--ghost:hover {
+      filter: none;
+      color: #0958d9;
+      background: #f0f7ff;
+      box-shadow:
+        0 0 0 1px rgba(9, 88, 217, 0.7) inset,
+        0 4px 12px rgba(22, 119, 255, 0.18);
+    }
+    .fx-btn-compose--ghost:active {
+      filter: none;
+      background: #e6f4ff;
+    }
     .fx-btn-compose-ic {
       display: inline-flex;
       opacity: 0.95;
@@ -407,19 +452,6 @@
       flex-shrink: 0; padding: 12px 20px; border-top: 1px solid var(--fx-border);
       display: flex; justify-content: flex-end; align-items: center; gap: 12px; background: #fff;
     }
-    .fx-mode-switch {
-      display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px;
-      font-size: 13px; color: var(--fx-text);
-    }
-    .fx-mode-btn {
-      display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px;
-      border: none; background: transparent; color: var(--fx-text); cursor: pointer;
-      font-size: 13px; font-family: inherit; line-height: 1.4;
-      transition: background 0.15s, color 0.15s;
-    }
-    .fx-mode-btn:hover:not(.is-active) { background: rgba(22, 119, 255, 0.06); color: #1677ff; }
-    .fx-mode-btn.is-active { border: none; background: #e6f4ff; color: #1677ff; font-weight: 500; }
-    .fx-mode-btn-ic { display: inline-flex; opacity: 0.9; }
     .fx-source-placeholder {
       display: none; flex: 1; flex-direction: column; align-items: center; justify-content: flex-start;
       padding: 16px 12px 32px; min-height: 240px; overflow: auto; background: #3d3d3d;
@@ -443,45 +475,6 @@
       display: block; margin-top: 8px; font-size: 12px; color: rgba(255, 255, 255, 0.85);
       letter-spacing: 0.02em;
     }
-    /* 题答分离：滚动在外层；iframe 绝对铺满避免未命中 height:100% 时露出灰底遮挡感 */
-    .fx-compose-wrap {
-      flex: 1 1 0;
-      min-height: 0;
-      min-width: 0;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      border-top: none;
-      background: #fff;
-      position: relative;
-    }
-    .fx-compose-scroll {
-      position: relative;
-      flex: 1 1 auto;
-      min-height: 0;
-      min-width: 0;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-      background: #fff;
-    }
-    .fx-compose-iframe {
-      position: absolute;
-      left: 0;
-      top: 0;
-      display: block;
-      margin: 0;
-      border: 0;
-      background: #fff;
-      width: max(100%, 920px);
-      min-width: 920px;
-      height: 100%;
-      min-height: 100%;
-      box-sizing: border-box;
-    }
-    .fx-compose-wrap.fx-hidden { display: none !important; }
-    .fx-q-list.fx-hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -499,7 +492,13 @@
     </nav>
     <div class="fx-top-actions">
       <button type="button" class="fx-delegate-text" id="btnDelegateHuman" title="将当前预览中的原文件带入委托表单">效果不好？转交委托录题</button>
-      <button type="button" class="fx-btn-compose" id="btnCompose" title="去组卷 · 进入组卷编辑" aria-label="去组卷，进入组卷编辑试卷">
+      <button type="button" class="fx-btn-compose fx-btn-compose--ghost" id="btnGroupQ" title="去组题 · 将当前题目加入题单" aria-label="去组题，将当前题目加入题单">
+        <span class="fx-btn-compose-ic" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h13v2H3V5zm0 4h13v2H3V9zm0 4h8v2H3v-2zm15 1v-3h-2v3h-3v2h3v3h2v-3h3v-2h-3z" fill="currentColor"/></svg>
+        </span>
+        <span>去组题</span>
+      </button>
+      <button type="button" class="fx-btn-compose fx-btn-compose--ghost" id="btnCompose" title="去组卷 · 进入组卷编辑" aria-label="去组卷，进入组卷编辑试卷">
         <span class="fx-btn-compose-ic" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-1 16H6v-2h12v2zm0-4H6v-2h7.5a4.5 4.5 0 0 1 0-2H6V7h12v8z" fill="currentColor"/><path d="M16 11h2v2h-2v2h-2v-2h-2v-2h2V9h2v2z" fill="currentColor"/></svg>
         </span>
@@ -562,24 +561,15 @@
       <div class="fx-right-h">
         <div class="fx-right-h-left">
           <span class="fx-q-count"><span class="fx-edit-area-label">AI 录题内容</span> · 共 <strong id="qTotal">0</strong> 道题</span>
-          <div class="fx-mode-switch" role="tablist" aria-label="录题展示模式">
-            <button type="button" class="fx-mode-btn is-active" id="btnModeCard" role="tab" aria-selected="true" data-mode="card" title="题答合一：题干、答案、解析同屏卡片">
-              <span class="fx-mode-btn-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z" fill="currentColor"/></svg></span>
-              题答合一
-            </button>
-            <button type="button" class="fx-mode-btn" id="btnModeCompose" role="tab" aria-selected="false" data-mode="compose" title="题答分离：卷面区；在工作区内单击任意位置打开题目编辑器">
-              <span class="fx-mode-btn-ic" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" fill="currentColor"/></svg></span>
-              题答分离
-            </button>
-          </div>
+          <span class="fx-q-hint" role="note">
+            <span class="fx-q-hint-ic" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="currentColor"/></svg>
+            </span>
+            分值设置：请前往右上角【去组卷】页面操作
+          </span>
         </div>
       </div>
       <div class="fx-q-list" id="qList"></div>
-      <div class="fx-compose-wrap fx-hidden" id="composeWrap" aria-hidden="true">
-        <div class="fx-compose-scroll">
-          <iframe class="fx-compose-iframe" id="composeFrame" title="编辑试卷（嵌入卷面区）" src="about:blank"></iframe>
-        </div>
-      </div>
     </div>
   </div>
   <div class="fx-editor-mask" id="edMask"></div>
@@ -594,6 +584,7 @@
     <div class="fx-editor-footer">
       <button type="button" class="fx-btn" id="edCancel">取消</button>
       <button type="button" class="fx-btn fx-btn-primary" id="edConfirm">确定</button>
+      <button type="button" class="fx-btn" id="edPreview" title="预览当前题目">预览</button>
     </div>
   </aside>
   <script>
@@ -993,7 +984,6 @@
       tags: ['AI识别']
     }
   ];
-  var recMode = 'card';
   var FX_Q_ACT_ICONS = {
     edit: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm14.71-9.67a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="currentColor"/></svg>',
     up: '<svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>',
@@ -1004,6 +994,37 @@
   function renderQs() {
     var el = document.getElementById('qList');
     el.innerHTML = '';
+    if (!questions.length) {
+      var empty = document.createElement('div');
+      empty.className = 'fx-q-empty';
+      empty.innerHTML =
+        '<div class="fx-q-empty-ic" aria-hidden="true">' +
+        '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z" fill="currentColor"/>' +
+        '<path d="M8 11h8v2H8v-2zm0 4h5v2H8v-2z" fill="currentColor" opacity=".55"/>' +
+        '</svg></div>' +
+        '<div class="fx-q-empty-title">暂无题目</div>' +
+        '<div class="fx-q-empty-sub">点击下方按钮，手动录入第一道题</div>' +
+        '<button type="button" class="fx-q-empty-btn" id="btnQEmptyAdd">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg>' +
+        '<span>新建题目</span></button>';
+      el.appendChild(empty);
+      var btnAdd = empty.querySelector('#btnQEmptyAdd');
+      if (btnAdd) {
+        btnAdd.addEventListener('click', function () {
+          questions.push({
+            stem: '新题目（请编辑）',
+            answer: '',
+            explain: '',
+            tags: ['待编辑']
+          });
+          refreshRightPanel();
+          openEditor();
+        });
+      }
+      return;
+    }
     questions.forEach(function (q, i) {
       var card = document.createElement('div');
       card.className = 'fx-q-card';
@@ -1076,51 +1097,10 @@
     });
   }
 
-  var COMPOSE_PAGE_SRC = '编辑试卷.html';
-
   function refreshRightPanel() {
     var qt = document.getElementById('qTotal');
     if (qt) qt.textContent = String(questions.length);
-    if (recMode === 'card') renderQs();
-  }
-
-  function setRecMode(mode) {
-    recMode = mode;
-    var qList = document.getElementById('qList');
-    var cw = document.getElementById('composeWrap');
-    var cf = document.getElementById('composeFrame');
-    var btnCard = document.getElementById('btnModeCard');
-    var btnCompose = document.getElementById('btnModeCompose');
-    var card = mode === 'card';
-    document.body.classList.toggle('fx-rec-compose', !card);
-    if (btnCard) {
-      btnCard.classList.toggle('is-active', card);
-      btnCard.setAttribute('aria-selected', card ? 'true' : 'false');
-    }
-    if (btnCompose) {
-      btnCompose.classList.toggle('is-active', !card);
-      btnCompose.setAttribute('aria-selected', !card ? 'true' : 'false');
-    }
-    if (qList) {
-      if (card) {
-        qList.classList.remove('fx-hidden');
-      } else {
-        qList.classList.add('fx-hidden');
-        qList.innerHTML = '';
-      }
-    }
-    if (cw) {
-      cw.classList.toggle('fx-hidden', card);
-      cw.setAttribute('aria-hidden', card ? 'true' : 'false');
-    }
-    if (!card && cf) {
-      var prev = cf.getAttribute('data-compose-src') || '';
-      if (prev !== COMPOSE_PAGE_SRC) {
-        cf.src = COMPOSE_PAGE_SRC;
-        cf.setAttribute('data-compose-src', COMPOSE_PAGE_SRC);
-      }
-    }
-    refreshRightPanel();
+    renderQs();
   }
 
   function move(i, delta) {
@@ -1170,36 +1150,28 @@
   document.getElementById('edConfirm').addEventListener('click', closeEditor);
   document.getElementById('edMask').addEventListener('click', closeEditor);
   document.getElementById('edPanel').addEventListener('click', function (e) { e.stopPropagation(); });
-
-  document.getElementById('btnModeCard').addEventListener('click', function () {
-    if (recMode === 'card') return;
-    setRecMode('card');
-  });
-  document.getElementById('btnModeCompose').addEventListener('click', function () {
-    if (recMode === 'compose') return;
-    setRecMode('compose');
-  });
-
-  var edPanel = document.getElementById('edPanel');
-  var fxWork = document.querySelector('.fx-work');
-  function editorIsOpen() {
-    return edPanel && edPanel.classList.contains('open');
-  }
-  if (fxWork) {
-    fxWork.addEventListener('click', function (e) {
-      if (recMode !== 'compose') return;
-      if (ocrSelectMode) return;
-      if (editorIsOpen()) return;
-      var t = e.target;
-      if (t.closest('.fx-left-h') || t.closest('.fx-right-h')) return;
-      if (t.closest('button, a, input, textarea, select, label')) return;
-      openEditor();
-    }, true);
+  var edPreviewBtn = document.getElementById('edPreview');
+  if (edPreviewBtn) {
+    edPreviewBtn.addEventListener('click', function () {
+      var fr = document.getElementById('edFrame');
+      try {
+        if (fr && fr.contentWindow) {
+          fr.contentWindow.postMessage({ type: 'fx-question-preview' }, '*');
+        }
+      } catch (e) {}
+      alert('预览功能（演示中）：将以预览模式展示当前题干、答案与解析。');
+    });
   }
 
   document.getElementById('btnCompose').addEventListener('click', function () {
     window.location.href = '去组卷编辑试卷.html';
   });
+  var btnGroupQ = document.getElementById('btnGroupQ');
+  if (btnGroupQ) {
+    btnGroupQ.addEventListener('click', function () {
+      window.location.href = '去组题.html';
+    });
+  }
   var btnDh = document.getElementById('btnDelegateHuman');
   if (btnDh) btnDh.addEventListener('click', goDelegateHuman);
 
@@ -1236,7 +1208,7 @@
     drag = null;
   });
 
-  setRecMode('card');
+  refreshRightPanel();
 })();
   </script>
 </body>
