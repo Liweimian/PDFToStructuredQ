@@ -39,7 +39,6 @@
           </div>
           <div class="fx-ai-actions">
             <button type="button" class="fx-ai-btn">查看</button>
-            <button type="button" class="fx-ai-btn">去组卷</button>
           </div>
         </article>
       </div>
@@ -122,10 +121,6 @@
       var btn = e.target.closest('.fx-ai-btn');
       if (!btn) return;
       var t = (btn.textContent || '').trim();
-      if (t === '去组卷') {
-        e.preventDefault();
-        window.location.href = '去组卷编辑试卷.html';
-      }
       if (t === '查看') {
         e.preventDefault();
         window.location.href = 'AI录题校改.html';
