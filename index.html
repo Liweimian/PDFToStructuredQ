@@ -908,9 +908,14 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 }
 .fx-dash-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin: 22px 0 8px;
+}
+@media (max-width: 960px) {
+  .fx-dash-cards {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 @media (max-width: 640px) {
   .fx-dash-cards {
@@ -964,6 +969,9 @@ mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c {
 }
 .fx-dash-card-ic--amber {
   background: #fff7ed;
+}
+.fx-dash-card-ic--green {
+  background: #ecfdf5;
 }
 .fx-dash-card-text {
   flex: 1;
@@ -1756,7 +1764,7 @@ body.fx-ai-workspace-default .fx-my-data-ic svg { display: block; }
   <section class="fx-ai-hero fx-dash-hero" aria-label="AI 智能录题">
     <div id="fxHeroStaging">
       <div id="fxEmptyWrap">
-        <label class="fx-ai-dropzone fx-breathe fx-dash-drop" id="fxDrop" for="fxFile" tabindex="0" role="button" aria-label="点击或拖拽上传试卷、作业、图片">
+        <label class="fx-ai-dropzone fx-breathe fx-dash-drop" id="fxDrop" for="fxFile" tabindex="0" role="button" aria-label="点击 / 拖拽 / 粘贴上传含题目答案文件">
           <div class="fx-drop-icon-wrap" aria-hidden="true">
             <svg class="fx-dash-hero-illus" width="120" height="110" viewBox="0 0 96 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <defs>
@@ -1794,7 +1802,7 @@ body.fx-ai-workspace-default .fx-my-data-ic svg { display: block; }
             <h2 id="fxUploadHeading" class="fx-dash-hero-title">AI 智能录题</h2>
             <div class="fx-dash-upload-cta">
               <button type="button" class="fx-dash-pick-btn" id="fxPickFileBtn">选择文件</button>
-              <p class="fx-dash-hint-line">点击 / 拖拽上传文件，AI 自动解析｜支持PDF DOCX JPG PNG</p>
+              <p class="fx-dash-hint-line">点击 / 拖拽 / 粘贴上传含题目答案文件，AI 自动解析｜支持 PDF、DOCX、JPG、PNG，限 5M 内</p>
             </div>
             <div class="fx-dash-feature-strip" role="list">
               <div class="fx-dash-feat" role="listitem">
@@ -1861,6 +1869,22 @@ body.fx-ai-workspace-default .fx-my-data-ic svg { display: block; }
           <div class="fx-dash-card-text">
             <h3>题库组卷</h3>
             <p>自由检索题库资源，按需生成题单或试卷。</p>
+          </div>
+        </div>
+      </a>
+      <a class="fx-dash-card" href="申请委托录题页面.html" onclick="window.location.href='申请委托录题页面.html'" aria-label="委托录题">
+        <div class="fx-dash-card-row">
+          <div class="fx-dash-card-ic fx-dash-card-ic--green" aria-hidden="true">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="9" y="10" width="26" height="30" rx="3" fill="#ecfdf5" stroke="#10b981" stroke-width="1.4"/>
+              <path d="M14 18h16M14 23h16M14 28h11" stroke="#6ee7b7" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="35" cy="34" r="9" fill="#fff" stroke="#059669" stroke-width="1.5"/>
+              <path d="M35 29.5v5l3 2" stroke="#059669" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="fx-dash-card-text">
+            <h3>委托录题</h3>
+            <p>提前 7 个自然日上传文件，委托人工录题。</p>
           </div>
         </div>
       </a>
@@ -2073,16 +2097,6 @@ body.fx-ai-workspace-default .fx-my-data-ic svg { display: block; }
     myData.addEventListener('click', function () {
       window.location.href = '我的创建.html';
     });
-    var myShare = document.createElement('button');
-    myShare.type = 'button';
-    myShare.id = 'fxMyShareBtn';
-    myShare.className = 'fx-my-data-btn';
-    myShare.setAttribute('aria-label', '我的分享');
-    myShare.innerHTML =
-      '<span class="fx-my-data-ic" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="5" r="2.4" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="12" r="2.4" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="19" r="2.4" stroke="currentColor" stroke-width="1.5"/><path d="M8.1 10.85l7.8-4.55M8.1 13.15l7.8 4.55" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span class="fx-my-data-txt">我的分享</span>';
-    myShare.addEventListener('click', function () {
-      window.location.href = '我的分享.html';
-    });
     var taskWrap = document.createElement('div');
     taskWrap.className = 'fx-header-task-wrap';
     taskWrap.innerHTML =
@@ -2122,7 +2136,6 @@ body.fx-ai-workspace-default .fx-my-data-ic svg { display: block; }
     });
     wrap.appendChild(taskWrap);
     wrap.appendChild(myData);
-    wrap.appendChild(myShare);
     extra.appendChild(wrap);
   }
   function bindTabs() {
